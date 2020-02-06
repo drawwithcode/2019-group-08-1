@@ -1,6 +1,5 @@
 var socket;
 var reset;
-
 //Array which contains all elements of the wall
 var bricks = [];
 
@@ -33,6 +32,14 @@ function setup() {
 
   socket = io.connect('http://192.168.43.125:3000');
   socket.on('brickBack', clicker);
+
+  socket.on('draw_cursor', function(data) {
+  var el = getCursorElement(data.id);
+  el.style.x = data.line[0].x;
+  el.style.y = data.line[0].y;
+  console.log(data);
+  });
+
 
   reset = createButton('reset');
   reset.position(width/2, height/2);
@@ -73,7 +80,7 @@ function errData(err){
 function clicker(data){
   var getBrick = bricks.find(block => block.id === data);
   getBrick.stato = false;
-  console.log(getBrick);
+  console.log(data);
 }
 
 
@@ -82,15 +89,23 @@ function draw() {
 
   // console.log('Sending: '+ mouseX + "," + mouseY);
 
-  // var data = {
-  //   x: mouseX,
-  //   y: mouseY
-  // }
+  socket.emit('draw_cursor', { line: [ mouseX ] });
 
-  // socket.emit('mouse', data);
+
+  var mousePos = {
+     x: mouseX,
+     y: mouseY
+   }
+
+ socket.emit('mouse', mousePos);
 
   for(var i = 0; i < bricks.length; i++){
     bricks[i].display();
+  }
+}
+
+function mousePressed(){
+  for(var i =0; i < bricks.length; i++){
     bricks[i].click();
   }
 }
@@ -111,7 +126,6 @@ function Brick(_id, _x, _y, _stato){
 }
 
   this.click = function(){
-    if(mouseIsPressed){
       if(mouseX > this.x && mouseX < this.x + this.w){
         if(mouseY > this.y && mouseY < this.y + this.h){
           this.stato = false;
@@ -120,8 +134,19 @@ function Brick(_id, _x, _y, _stato){
 
           var data = this.id;
           socket.emit('clickBrick', data);
-        }
       }
     }
   }
 }
+
+
+      function getCursorElement (id) {
+    var elementId = 'cursor-' + id;
+    var element = document.getElementById(elementId);
+    if(element == null) {
+    element = document.createElement('div');
+    element.id = elementId;
+    element.className = 'cursor';
+    }
+    return element;
+    }

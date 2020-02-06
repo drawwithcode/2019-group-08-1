@@ -21,4 +21,8 @@ function newConnection(socket){
   function brickMessage(data){
     socket.broadcast.emit('brickBack', data);
   }
+
+  socket.on('draw_cursor', function (data) {
+    io.emit('draw_cursor', { line: data.line, id: socket.id });
+  });
 }
