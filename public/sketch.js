@@ -160,11 +160,12 @@ function Brick(_id, _x, _y, _stato){
   }
 }
 
+
 function Cursor(_x, _y, _id){
   this.x = _x;
   this.y = _y;
   this.id = _id;
-  this.color = random(255), random(255), random(255);
+  this.color = color(random(255), random(255), random(255));
 
   this.display = function(){
     fill(this.color);
