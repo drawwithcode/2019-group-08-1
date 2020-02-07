@@ -2,6 +2,9 @@ var socket;
 var reset;
 //Array which contains all elements of the wall
 var bricks = [];
+var cursors = [];
+
+var mouse;
 
 function preload(){
 }
@@ -10,6 +13,7 @@ function setup() {
 
   //The canvas's width is 3 times bigger than the windowWidth
   createCanvas(windowWidth*3, windowHeight);
+
 
   //Firebase configuration
   var firebaseConfig = {
@@ -33,17 +37,16 @@ function setup() {
   socket = io.connect('http://192.168.43.125:3000');
   socket.on('brickBack', clicker);
 
-  socket.on('draw_cursor', function(data) {
-  var el = getCursorElement(data.id);
-  el.style.x = data.line[0].x;
-  el.style.y = data.line[0].y;
-  console.log(data);
-  });
-
-
   reset = createButton('reset');
   reset.position(width/2, height/2);
   reset.mousePressed(turnback);
+
+  socket.on('newCursor', function(cursor){
+    var tempCursor = new Cursor(cursor.x, cursor.y, cursor.id);
+    cursors.push(tempCursor);
+  });
+
+  socket.on('posMouse', mousePos);
 
 }
 
@@ -83,24 +86,32 @@ function clicker(data){
   console.log(data);
 }
 
+function mousePos(data){
+  var getPos = cursors.find(cursor => cursor.id === data.id);
+  getPos.x = data.x;
+  getPos.y = data.y;
+  getPos.id = data.id;
+}
+
 
 function draw() {
   background('peachpuff');
 
+  var mouse = {
+    x: mouseX,
+    y: mouseY
+  }
+
+  socket.emit('mouse', mouse);
+
   // console.log('Sending: '+ mouseX + "," + mouseY);
-
-  socket.emit('draw_cursor', { line: [ mouseX ] });
-
-
-  var mousePos = {
-     x: mouseX,
-     y: mouseY
-   }
-
- socket.emit('mouse', mousePos);
 
   for(var i = 0; i < bricks.length; i++){
     bricks[i].display();
+  }
+
+  for(var i = 0; i < cursors.length; i++){
+    cursors[i].display();
   }
 }
 
@@ -125,6 +136,7 @@ function Brick(_id, _x, _y, _stato){
   }
 }
 
+
   this.click = function(){
       if(mouseX > this.x && mouseX < this.x + this.w){
         if(mouseY > this.y && mouseY < this.y + this.h){
@@ -139,14 +151,13 @@ function Brick(_id, _x, _y, _stato){
   }
 }
 
+function Cursor(_x, _y, _id){
+  this.x = _x;
+  this.y = _y;
+  this.id = _id;
 
-      function getCursorElement (id) {
-    var elementId = 'cursor-' + id;
-    var element = document.getElementById(elementId);
-    if(element == null) {
-    element = document.createElement('div');
-    element.id = elementId;
-    element.className = 'cursor';
-    }
-    return element;
-    }
+  this.display = function(){
+    fill('blue');
+    ellipse(this.x, this.y, 50);
+  }
+}
