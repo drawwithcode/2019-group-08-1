@@ -34,7 +34,8 @@ function setup() {
   var ref = database.ref('bricks');
   ref.once('value', gotData, errData);
 
-  socket = io.connect('http://192.168.43.171:3000');
+  socket = io.connect();
+  //socket = io.connect('http://192.168.43.171:3000');
   //socket = io();
   socket.on('brickBack', clicker);
 
