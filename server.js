@@ -44,11 +44,4 @@ function newConnection(socket){
   socket.on('disconnect', function() {
     socket.broadcast.emit('deleteCursor', socket.id);
   })
-
-  socket.on('rottino', function(data) {
-    socket.broadcast.emit('rottino', data);
-  })
-  socket.on('rottissimo', function(data) {
-    socket.broadcast.emit('rottino', data);
-  })
 }

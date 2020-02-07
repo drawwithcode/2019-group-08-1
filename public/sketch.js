@@ -49,17 +49,6 @@ function setup() {
     cursors.splice(getPos, 1)
   })
 
-  socket.on('rottino', function(data) {
-    var getBrick = bricks[data]
-    if (getBrick.rotto == 1) {
-      getBrick.stato = false;
-      socket.emit('rottissimo', data)
-    }
-  })
-  socket.on('rottissimo', function(data) {
-    var getBrick = bricks[data]
-    getBrick.stato = false;
-  })
 }
 
 function turnback(){
@@ -142,17 +131,12 @@ function Brick(_id, _x, _y, _stato){
   this.x = _x;
   this.y = _y;
   this.stato = _stato;
-  this.rotto = 0;
   this.w = 100;
   this.h = 50;
 
   this.display = function() {
-    if (this.stato == true && this.rotto == 0) {
+    if (this.stato == true) {
       fill(255, 0, 0);
-      rect(this.x, this.y, this.w, this.h);
-    }
-    if (this.stato == true && this.rotto == 1) {
-      fill(150, 0, 0);
       rect(this.x, this.y, this.w, this.h);
     }
 }
@@ -161,17 +145,15 @@ function Brick(_id, _x, _y, _stato){
   this.click = function(){
       if(mouseX > this.x && mouseX < this.x + this.w){
         if(mouseY > this.y && mouseY < this.y + this.h){
-          if (this.rotto == 0) {
-            this.rotto = 1;
-            var brickIndex = bricks.findIndex(brick => brick.id === this.id)
-            socket.emit('rottino', brickIndex)
+          var a = cursors.find(cursor => cursor.x >= this.x && cursor.x <= this.x + this.w && cursor.y >= this.y && cursor.y <= this.y + this.h);
+          if (a != undefined) {
+            this.stato = false;
+            var brickRef = firebase.database().ref('bricks/' + this.id);
+            brickRef.update({stato: false});
+
+            var data = this.id;
+            socket.emit('clickBrick', data);
           }
-          // this.stato = false;
-          // var brickRef = firebase.database().ref('bricks/' + this.id);
-          // brickRef.update({stato: false});
-          //
-          // var data = this.id;
-          // socket.emit('clickBrick', data);
       }
     }
   }
