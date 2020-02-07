@@ -164,9 +164,10 @@ function Cursor(_x, _y, _id){
   this.x = _x;
   this.y = _y;
   this.id = _id;
+  this.color = "" + random(255) + random(255) + random(255);
 
   this.display = function(){
-    fill('blue');
+    fill(this.color);
     ellipse(this.x, this.y, 50);
   }
 }
