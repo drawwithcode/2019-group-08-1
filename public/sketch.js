@@ -34,8 +34,8 @@ function setup() {
   var ref = database.ref('bricks');
   ref.once('value', gotData, errData);
 
-  //socket = io.connect('http://192.168.43.125:3000');
-  socket = io();
+  socket = io.connect('http://192.168.43.125:3000');
+  //socket = io();
   socket.on('brickBack', clicker);
 
   reset = createButton('reset');
@@ -92,11 +92,12 @@ function mousePos(data){
   getPos.x = data.x;
   getPos.y = data.y;
   getPos.id = data.id;
+  console.log(getPos.x, getPos.y, getPos.id);
 }
 
 
 function draw() {
-  background('peachpuff');
+  background('black');
 
   var mouse = {
     x: mouseX,
