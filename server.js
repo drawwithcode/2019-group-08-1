@@ -1,7 +1,7 @@
 var express = require('express');
 
 var app = express();
-var server = app.listen(3000, '192.168.43.125');
+var server = app.listen(3000, '192.168.43.171');
 //var port = process.env.PORT || 3000;
 
 app.use(express.static('public'));
@@ -15,11 +15,6 @@ var io = socket(server);
 io.sockets.on('connection', newConnection);
 
 function newConnection(socket){
-  var cursor = {
-    x: 100,
-    y: 100,
-    id: socket.id,
-  }
   console.log('ciao: ' + socket.id);
 
   socket.on('clickBrick', brickMessage);
@@ -29,8 +24,6 @@ function newConnection(socket){
   function brickMessage(data){
     socket.broadcast.emit('brickBack', data);
   }
-
-  socket.broadcast.emit('newCursor', cursor);
 
   function posMessage(data){
     var mouse = {
@@ -42,4 +35,15 @@ function newConnection(socket){
 
     socket.broadcast.emit('posMouse', mouse);
   }
+
+  socket.on('disconnect', function() {
+    socket.broadcast.emit('deleteCursor', socket.id);
+  })
+
+  socket.on('rottino', function(data) {
+    socket.broadcast.emit('rottino', data);
+  })
+  socket.on('rottissimo', function(data) {
+    socket.broadcast.emit('rottino', data);
+  })
 }

@@ -12,7 +12,7 @@ function preload(){
 function setup() {
 
   //The canvas's width is 3 times bigger than the windowWidth
-  createCanvas(windowWidth*3, windowHeight);
+  createCanvas(1920*3, 1080);
 
 
   //Firebase configuration
@@ -34,7 +34,7 @@ function setup() {
   var ref = database.ref('bricks');
   ref.once('value', gotData, errData);
 
-  socket = io.connect('http://192.168.43.125:3000');
+  socket = io.connect('http://192.168.43.171:3000');
   //socket = io();
   socket.on('brickBack', clicker);
 
@@ -42,13 +42,24 @@ function setup() {
   reset.position(width/2, height/2);
   reset.mousePressed(turnback);
 
-  socket.on('newCursor', function(cursor){
-    var tempCursor = new Cursor(cursor.x, cursor.y, cursor.id);
-    cursors.push(tempCursor);
-  });
-
   socket.on('posMouse', mousePos);
 
+  socket.on('deleteCursor', function(data) {
+    var getPos = cursors.findIndex(cursor => cursor.id === data);
+    cursors.splice(getPos, 1)
+  })
+
+  socket.on('rottino', function(data) {
+    var getBrick = bricks[data]
+    if (getBrick.rotto == 1) {
+      getBrick.stato = false;
+      socket.emit('rottissimo', data)
+    }
+  })
+  socket.on('rottissimo', function(data) {
+    var getBrick = bricks[data]
+    getBrick.stato = false;
+  })
 }
 
 function turnback(){
@@ -89,10 +100,13 @@ function clicker(data){
 
 function mousePos(data){
   var getPos = cursors.find(cursor => cursor.id === data.id);
-  getPos.x = data.x;
-  getPos.y = data.y;
-  getPos.id = data.id;
-  console.log(getPos.x, getPos.y, getPos.id);
+  if (getPos == undefined) {
+    var tempCursor = new Cursor(data.x, data.y, data.id);
+    cursors.push(tempCursor);
+  }else {
+    getPos.x = data.x;
+    getPos.y = data.y;
+  }
 }
 
 
@@ -128,26 +142,36 @@ function Brick(_id, _x, _y, _stato){
   this.x = _x;
   this.y = _y;
   this.stato = _stato;
+  this.rotto = 0;
   this.w = 100;
   this.h = 50;
 
   this.display = function() {
-  if (this.stato == true) {
-    fill(255, 0, 0);
-    rect(this.x, this.y, this.w, this.h);
-  }
+    if (this.stato == true && this.rotto == 0) {
+      fill(255, 0, 0);
+      rect(this.x, this.y, this.w, this.h);
+    }
+    if (this.stato == true && this.rotto == 1) {
+      fill(150, 0, 0);
+      rect(this.x, this.y, this.w, this.h);
+    }
 }
 
 
   this.click = function(){
       if(mouseX > this.x && mouseX < this.x + this.w){
         if(mouseY > this.y && mouseY < this.y + this.h){
-          this.stato = false;
-          var brickRef = firebase.database().ref('bricks/' + this.id);
-          brickRef.update({stato: false});
-
-          var data = this.id;
-          socket.emit('clickBrick', data);
+          if (this.rotto == 0) {
+            this.rotto = 1;
+            var brickIndex = bricks.findIndex(brick => brick.id === this.id)
+            socket.emit('rottino', brickIndex)
+          }
+          // this.stato = false;
+          // var brickRef = firebase.database().ref('bricks/' + this.id);
+          // brickRef.update({stato: false});
+          //
+          // var data = this.id;
+          // socket.emit('clickBrick', data);
       }
     }
   }
