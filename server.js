@@ -25,8 +25,14 @@ function newConnection(socket) {
   console.log('a new user: ' + socket.id);
   var clientIpAddress = socket.request.headers['x-real-ip'] || socket.request.connection.remoteAddress;
   console.log(' new request from : '+ clientIpAddress);
-  socket.emit("cacca", clientIpAddress)
   var geo = geoip.lookup(clientIpAddress);
+  var datii = {
+    ip: clientIpAddress,
+    geo: geo
+  }
+
+  socket.emit("cacca", datii)
+
 
   console.log(geo);
 
