@@ -1,46 +1,47 @@
-var express = require('express');
+//________________ LOAD PACKAGES __________________________________
+var express = require('express'); // load express
+var socket = require('socket.io'); // load socket.io
 
-var app = express();
+//________________ INITIALIZE THE SERVER ___________________________
+var app = express(); // set the express app
+app.use(express.static('public')); // select the static files in the public folder
 
-var server = app.listen(process.env.PORT || 5000, function () {
+// set the port of the server and log the port
+var server = app.listen(process.env.PORT || 5000, function() {
   var port = server.address().port;
   console.log("Express is working on port " + port);
 });
-//var server = app.listen(3000, '192.168.43.125');
-//var port = process.env.PORT || 3000;
 
-app.use(express.static('public'));
+var io = socket(server); // set the server socket
 
-console.log("cacca");
-
-var socket = require('socket.io');
-
-var io = socket(server);
-
+// fires the "newConnection" function on each new connection
 io.sockets.on('connection', newConnection);
 
-function newConnection(socket){
-  console.log('ciao: ' + socket.id);
 
-  socket.on('clickBrick', brickMessage);
-  socket.on('mouse', posMessage);
+//________________ NEW CONNECTION __________________________________
+function newConnection(socket) {
+  // log the new USER ID
+  console.log('a new user: ' + socket.id);
 
-
-  function brickMessage(data){
-    socket.broadcast.emit('brickBack', data);
-  }
-
-  function posMessage(data){
-    var mouse = {
-      x:data.x,
-      y:data.y,
-      id:socket.id
+  // receive the MOUSE POSITION from client and broadcast it to other clients
+  // adding the USER ID
+  socket.on('mouse', function(data) {
+    var mouseData = {
+      x: data.x,
+      y: data.y,
+      id: socket.id
     }
-    console.log(mouse);
 
-    socket.broadcast.emit('posMouse', mouse);
-  }
+    socket.broadcast.emit('posMouse', mouseData);
+  });
 
+  // receive the BRICK ID from the client and broadcast it to the other clients
+  socket.on('clickBrick', function(data) {
+    socket.broadcast.emit('destroyBrick', data);
+  });
+
+  // when the user DISCONNECT send it's ID to the clients to DELETE
+  // the corresponding CURSOR
   socket.on('disconnect', function() {
     socket.broadcast.emit('deleteCursor', socket.id);
   })

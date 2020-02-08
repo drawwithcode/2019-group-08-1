@@ -1,21 +1,17 @@
-var socket;
-var reset;
-//Array which contains all elements of the wall
-var bricks = [];
-var cursors = [];
-
-var mouse;
+var socket; // socket of this CLIENT
+var bricks = []; // arry containing the bricks of the wall
+var cursors = []; // array containing cursors of other clients
+var reset; // reset buttont to restore the wall
 
 function preload(){
 }
 
 function setup() {
 
-  //The canvas's width is 3 times bigger than the windowWidth
+  // The canvas's width is 3 times bigger than the common windowWidth
   createCanvas(1920*3, 1080);
 
-
-  //Firebase configuration
+  // Firebase configuration
   var firebaseConfig = {
     apiKey: "AIzaSyCaz9zOqec-Fo_c91NhTfDIRqik3GouS6A",
     authDomain: "break-the-wall-fc47e.firebaseapp.com",
@@ -29,22 +25,35 @@ function setup() {
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
 
-  //Creating a variable containing the database
+  // Create a variable containing the database
   var database = firebase.database();
+
+  // Firebase reference in which are the bricks
   var ref = database.ref('bricks');
-  ref.once('value', gotData, errData);
 
+  // Only once on the opening of the page fill the BRICKS array
+  // with the informations stored in FIREBASE
+  ref.once('value', createBricks);
+
+  // Store the socket of this client
   socket = io.connect();
-  //socket = io.connect('http://192.168.43.171:3000');
-  //socket = io();
-  socket.on('brickBack', clicker);
 
+  // Create the button to reset the wall
   reset = createButton('reset');
   reset.position(width/2, height/2);
-  reset.mousePressed(turnback);
+  reset.mousePressed(resetWall);
 
+  //________________ SOCKETS LISTENERS ___________________________
+
+  // Receive the ID of the brick to destroy
+  socket.on('destroyBrick', clicker);
+
+  // Receive the MOUSE POSITIONS of the other clients
+  // and add the new users to the CURSORS array
   socket.on('posMouse', mousePos);
 
+  // Receive the ID of user that disconnected
+  // and remove it from the CURSORS array
   socket.on('deleteCursor', function(data) {
     var getPos = cursors.findIndex(cursor => cursor.id === data);
     cursors.splice(getPos, 1)
@@ -52,7 +61,56 @@ function setup() {
 
 }
 
-function turnback(){
+function draw() {
+
+  background('black');
+
+  // Emit the mouse position to the server
+  var mousePosition = {
+    x: mouseX,
+    y: mouseY
+  }
+  socket.emit('mouse', mousePosition);
+
+  // Display the WALL
+  for(var i = 0; i < bricks.length; i++){
+    bricks[i].display();
+  }
+
+  // Display the CURSORS
+  for(var i = 0; i < cursors.length; i++){
+    cursors[i].display();
+  }
+}
+
+//________________ FUNCTIONS ___________________________
+
+//_____________________________________________
+// FILL THE "BRICKS" ARRAY WITH FIREBASE DATAS
+
+function createBricks(data){
+  // Variables which contains all the values of the database
+  var blocchi = data.val();
+
+  // Array which contains all the keys in the database
+  var keys = Object.keys(blocchi);
+
+  // For cycle to create the array containg the bricks using database datas
+  for(i = 0; i < keys.length; i++){
+    var k = keys[i]; // key of the keys array in position i
+    var brick = blocchi[k]; // brick corresponding to the k key
+    tempBrick = new Brick(k, brick.x, brick.y, brick.stato); // Create the brick object
+    bricks.push(tempBrick); // store the brick in the wall
+  }
+}
+
+function mousePressed(){
+  for(var i =0; i < bricks.length; i++){
+    bricks[i].click();
+  }
+}
+
+function resetWall(){
   for (i = 0; i < bricks.length; i++) {
     var tempBrick = bricks[i]
     var brickRef = firebase.database().ref('bricks/' + tempBrick.id);
@@ -62,25 +120,6 @@ function turnback(){
   }
 }
 
-function gotData(data){
-  //Variables which contains all the values of the database
-  var blocchi = data.val();
-
-  //Array which contains all the keys in the database
-  var keys = Object.keys(blocchi);
-
-  //For cycle to create the array containg the bricks using database datas
-  for(i = 0; i < keys.length; i++){
-    var k = keys[i]; //key of the keys array in position i
-    var brick = blocchi[k]; //brick corresponding to the k key
-    tempBrick = new Brick(k, brick.x, brick.y, brick.stato);
-    bricks.push(tempBrick);
-  }
-}
-
-function errData(err){
-  console.log(err);
-}
 
 function clicker(data){
   var getBrick = bricks.find(block => block.id === data);
@@ -99,33 +138,6 @@ function mousePos(data){
   }
 }
 
-
-function draw() {
-  background('black');
-
-  var mouse = {
-    x: mouseX,
-    y: mouseY
-  }
-
-  socket.emit('mouse', mouse);
-
-  // console.log('Sending: '+ mouseX + "," + mouseY);
-
-  for(var i = 0; i < bricks.length; i++){
-    bricks[i].display();
-  }
-
-  for(var i = 0; i < cursors.length; i++){
-    cursors[i].display();
-  }
-}
-
-function mousePressed(){
-  for(var i =0; i < bricks.length; i++){
-    bricks[i].click();
-  }
-}
 
 function Brick(_id, _x, _y, _stato){
   this.id = _id;
@@ -159,7 +171,6 @@ function Brick(_id, _x, _y, _stato){
     }
   }
 }
-
 
 function Cursor(_x, _y, _id){
   this.x = _x;
