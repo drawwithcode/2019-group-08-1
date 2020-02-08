@@ -1,7 +1,12 @@
+
+//________________ GLOBAL VARIABLES ___________________________
+
 var socket; // socket of this CLIENT
 var bricks = []; // arry containing the bricks of the wall
 var cursors = []; // array containing cursors of other clients
 var reset; // reset buttont to restore the wall
+
+//________________ PRELOAD, SETUP & DRAW ___________________________
 
 function preload(){
 }
@@ -85,7 +90,6 @@ function draw() {
 
 //________________ FUNCTIONS ___________________________
 
-//_____________________________________________
 // FILL THE "BRICKS" ARRAY WITH FIREBASE DATAS
 
 function createBricks(data){
@@ -104,80 +108,136 @@ function createBricks(data){
   }
 }
 
+// FIRES THE "CLICK" METHOD OF THE BRICKS WHEN THE USER CLICKS
+
 function mousePressed(){
+  // Execute the "click" method for all the bricks
   for(var i =0; i < bricks.length; i++){
     bricks[i].click();
   }
 }
 
+// RESET ALL BRICKS "STATO" TO TRUE ON FIREBASE
+
 function resetWall(){
   for (i = 0; i < bricks.length; i++) {
-    var tempBrick = bricks[i]
+    var tempBrick = bricks[i] // Get the brick on i position of the array
+    // Use the brick's ID to find that brick on firebase databse
     var brickRef = firebase.database().ref('bricks/' + tempBrick.id);
+    // Set the brick STATO to TRUE
     brickRef.update({
       stato: true
     });
   }
 }
 
+// RECEIVE THE CLICKED BRICK'S "ID" FROM THE SERVER
+// AND SET IT'S "STATO" TO "FALSE"
 
 function clicker(data){
+  // Find the brick on the BRICKS array that has the same ID
+  // of the data received
   var getBrick = bricks.find(block => block.id === data);
-  getBrick.stato = false;
-  console.log(data);
+  getBrick.stato = false; // Set the STATO to FALSE
 }
 
+// CREATE OR UPDATE THE CURSORS OF OTHER USERS
+
 function mousePos(data){
+  // Find the cursor that has the same ID of the data received
   var getPos = cursors.find(cursor => cursor.id === data.id);
+  // If no cursor with that ID is find ---> "getPos" is set to undefined
+  // so create a new cursor with that ID
   if (getPos == undefined) {
-    var tempCursor = new Cursor(data.x, data.y, data.id);
-    cursors.push(tempCursor);
-  }else {
+    var tempCursor = new Cursor(data.x, data.y, data.id); // Create new cursor
+    cursors.push(tempCursor); // Push it on the "cursors" array
+  }
+  // If there is a cursor with that ID update the position
+  else {
     getPos.x = data.x;
     getPos.y = data.y;
   }
 }
 
+//________________ CLASSES ___________________________
 
-function Brick(_id, _x, _y, _stato){
+//BRICKS OBJECTS THAT BUILD THE WALL
+
+function Brick(_id, _x, _y, _stato) {
+
+  // BRICK ATTRIBUTES
+
+  // Each brick has an unique ID
+  // that's equal to it's firebase key
   this.id = _id;
+  // Brick position
   this.x = _x;
   this.y = _y;
+  // Brick stato --> true = visible & flase = invisible
   this.stato = _stato;
+  // Brick dimensions
   this.w = 100;
   this.h = 50;
 
+  // BRICK METHODS
+
+  // DISPLAY
+  // The display method draw the brick only if its state is true
   this.display = function() {
     if (this.stato == true) {
       fill(255, 0, 0);
       rect(this.x, this.y, this.w, this.h);
     }
-}
+  }
 
+  // CLICK
+  // The click method set the "stato" of the brick to false
+  // if the mouse is hover and another user's mouse is hover
+  this.click = function() {
 
-  this.click = function(){
-      if(mouseX > this.x && mouseX < this.x + this.w){
-        if(mouseY > this.y && mouseY < this.y + this.h){
-          var a = cursors.find(cursor => cursor.x >= this.x && cursor.x <= this.x + this.w && cursor.y >= this.y && cursor.y <= this.y + this.h);
-          if (a != undefined) {
-            this.stato = false;
-            var brickRef = firebase.database().ref('bricks/' + this.id);
-            brickRef.update({stato: false});
+    // these ifs chek if the mouse is over the brick
+    if (mouseX > this.x && mouseX < this.x + this.w) {
+      if (mouseY > this.y && mouseY < this.y + this.h) {
+        // Search for another cursor over the brick
+        var a = cursors.find(cursor => cursor.x >= this.x && cursor.x <= this.x + this.w && cursor.y >= this.y && cursor.y <= this.y + this.h);
+        // If there's almost another user set the brick's "stato" to false
+        // and tell it to the server
+        if (a != undefined) {
+          this.stato = false;
+          // Set the stato to false on firebase
+          var brickRef = firebase.database().ref('bricks/' + this.id);
+          brickRef.update({
+            stato: false
+          });
 
-            var data = this.id;
-            socket.emit('clickBrick', data);
-          }
+          // Emit the brick ID to the server to set its stato
+          // to false also on ther clients
+          var data = this.id;
+          socket.emit('clickBrick', data);
+        }
       }
     }
   }
 }
 
+// CURSOR OF ANOTHER USERS
+
 function Cursor(_x, _y, _id){
+
+  // CURSOR ATTRIBUTES
+
+  // Cursor's position
   this.x = _x;
   this.y = _y;
+  // Cursor's unique ID equal to it's SOCKET ID
   this.id = _id;
+  // Random color
   this.color = color(random(255), random(255), random(255));
 
+  // CURSOR METHODS
+
+  // DISPLAY
+  // Draw the cursor with it's color
   this.display = function(){
     fill(this.color);
     ellipse(this.x, this.y, 50);
