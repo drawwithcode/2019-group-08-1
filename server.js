@@ -1,6 +1,7 @@
 //________________ LOAD PACKAGES __________________________________
 var express = require('express'); // load express
 var socket = require('socket.io'); // load socket.io
+var geoip = require('geoip-lite'); // Load geoIp-lite
 
 //________________ INITIALIZE THE SERVER ___________________________
 var app = express(); // set the express app
@@ -22,6 +23,12 @@ io.sockets.on('connection', newConnection);
 function newConnection(socket) {
   // log the new USER ID
   console.log('a new user: ' + socket.id);
+  var clientIpAddress = socket.request.connection.remoteAddress;
+  console.log(' new request from : '+ clientIpAddress);
+
+  var geo = geoip.lookup(clientIpAddress);
+
+  console.log(geo);
 
   // receive the MOUSE POSITION from client and broadcast it to other clients
   // adding the USER ID
