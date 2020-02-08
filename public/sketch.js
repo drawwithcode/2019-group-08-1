@@ -50,6 +50,10 @@ function setup() {
 
   //________________ SOCKETS LISTENERS ___________________________
 
+  socket.on("cacca", function(data) {
+    console.log(data);
+  })
+
   // Receive the ID of the brick to destroy
   socket.on('destroyBrick', clicker);
 

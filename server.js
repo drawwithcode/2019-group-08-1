@@ -23,9 +23,9 @@ io.sockets.on('connection', newConnection);
 function newConnection(socket) {
   // log the new USER ID
   console.log('a new user: ' + socket.id);
-  var clientIpAddress = socket.request.connection.remoteAddress;
+  var clientIpAddress = socket.request.headers['x-real-ip'] || socket.request.connection.remoteAddress;
   console.log(' new request from : '+ clientIpAddress);
-
+  socket.emit("cacca", clientIpAddress)
   var geo = geoip.lookup(clientIpAddress);
 
   console.log(geo);
