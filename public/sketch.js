@@ -5,10 +5,16 @@ var socket; // socket of this CLIENT
 var bricks = []; // arry containing the bricks of the wall
 var cursors = []; // array containing cursors of other clients
 var reset; // reset buttont to restore the wall
+var sound, soundNear, bg;
+var mySide;
+var peopleOnMySide = 0;
 
 //________________ PRELOAD, SETUP & DRAW ___________________________
 
 function preload(){
+  sound = loadSound('assets/stonehit.mp3')
+  soundNear = loadSound('assets/near.wav')
+  bg = loadImage('assets/back.png')
 }
 
 function setup() {
@@ -50,6 +56,17 @@ function setup() {
 
   //________________ SOCKETS LISTENERS ___________________________
 
+  socket.on('yourSide', function(data) {
+    mySide = data.mySide;
+    peopleOnMySide = data.peopleOnMySide;
+  })
+
+  socket.on('newPlayer', function(data) {
+    if (data == mySide) {
+      peopleOnMySide++;
+    }
+  })
+
   // Receive the ID of the brick to destroy
   socket.on('destroyBrick', clicker);
 
@@ -60,8 +77,40 @@ function setup() {
   // Receive the ID of user that disconnected
   // and remove it from the CURSORS array
   socket.on('deleteCursor', function(data) {
-    var getPos = cursors.findIndex(cursor => cursor.id === data);
+    if (data.side == mySide) {
+      peopleOnMySide--;
+    }
+    var getPos = cursors.findIndex(cursor => cursor.id === data.id);
     cursors.splice(getPos, 1)
+  })
+
+  socket.on('click', function(data) {
+    if (data.side != mySide) {
+      var tempDistances = [];
+      for (var i = 0; i < cursors.length; i++) {
+        var tempCursor = cursors[i];
+        var d = dist(mouseX, mouseY, tempCursor.x, tempCursor.y);
+        tempDistances.push(d);
+      }
+      var minDistance = min(tempDistances);
+      var clickDistance = dist(mouseX, mouseY, data.x, data.y)
+      if (minDistance >= clickDistance - 50 && minDistance <= clickDistance + 50) {
+
+        var span = 1000
+        var near = 100;
+        if (clickDistance < span) {
+          if (clickDistance <= near) {
+            soundNear.play();
+          }else{
+            var vol = map(clickDistance,0,span,2,0.1);
+            sound.setVolume(vol)
+            sound.play();
+            console.log(clickDistance);
+          }
+        }
+      }
+
+    }
   })
 
 }
@@ -69,23 +118,25 @@ function setup() {
 function draw() {
 
   background('black');
-
+  image(bg,0,0)
   // Emit the mouse position to the server
   var mousePosition = {
     x: mouseX,
-    y: mouseY
+    y: mouseY,
+    side: mySide
   }
   socket.emit('mouse', mousePosition);
+
+  // Display the CURSORS
+  for(var i = 0; i < cursors.length; i++){
+    cursors[i].display();
+  }
 
   // Display the WALL
   for(var i = 0; i < bricks.length; i++){
     bricks[i].display();
   }
 
-  // Display the CURSORS
-  for(var i = 0; i < cursors.length; i++){
-    cursors[i].display();
-  }
 }
 
 //________________ FUNCTIONS ___________________________
@@ -144,18 +195,21 @@ function clicker(data){
 // CREATE OR UPDATE THE CURSORS OF OTHER USERS
 
 function mousePos(data){
-  // Find the cursor that has the same ID of the data received
-  var getPos = cursors.find(cursor => cursor.id === data.id);
-  // If no cursor with that ID is find ---> "getPos" is set to undefined
-  // so create a new cursor with that ID
-  if (getPos == undefined) {
-    var tempCursor = new Cursor(data.x, data.y, data.id); // Create new cursor
-    cursors.push(tempCursor); // Push it on the "cursors" array
-  }
-  // If there is a cursor with that ID update the position
-  else {
-    getPos.x = data.x;
-    getPos.y = data.y;
+  if (data.side != mySide) {
+    // Find the cursor that has the same ID of the data received
+    var getPos = cursors.find(cursor => cursor.id === data.id);
+    // If no cursor with that ID is find ---> "getPos" is set to undefined
+    // so create a new cursor with that ID
+    if (getPos == undefined) {
+      var tempCursor = new Cursor(data.x, data.y, data.id); // Create new cursor
+      cursors.push(tempCursor); // Push it on the "cursors" array
+    }
+    // If there is a cursor with that ID update the position
+    else {
+      getPos.x = data.x;
+      getPos.y = data.y;
+    }
+
   }
 }
 
@@ -198,6 +252,16 @@ function Brick(_id, _x, _y, _stato) {
     // these ifs chek if the mouse is over the brick
     if (mouseX > this.x && mouseX < this.x + this.w) {
       if (mouseY > this.y && mouseY < this.y + this.h) {
+
+        if (this.stato == true) {
+          var clickPosition = {
+            x: mouseX,
+            y: mouseY,
+            side: mySide
+          }
+          socket.emit('click', clickPosition)
+        }
+
         // Search for another cursor over the brick
         var a = cursors.find(cursor => cursor.x >= this.x && cursor.x <= this.x + this.w && cursor.y >= this.y && cursor.y <= this.y + this.h);
         // If there's almost another user set the brick's "stato" to false
