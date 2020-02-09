@@ -3,6 +3,8 @@ var express = require('express'); // load express
 var socket = require('socket.io'); // load socket.io
 var geoip = require('geoip-lite'); // Load geoIp-lite
 
+const publicIp = require('public-ip');
+
 //________________ INITIALIZE THE SERVER ___________________________
 var app = express(); // set the express app
 app.use(express.static('public')); // select the static files in the public folder
@@ -25,16 +27,11 @@ function newConnection(socket) {
   console.log('a new user: ' + socket.id);
   var clientIpAddress = socket.request.headers['x-real-ip'] || socket.request.connection.remoteAddress;
   console.log(' new request from : '+ clientIpAddress);
-  var geo = geoip.lookup(clientIpAddress);
-  var datii = {
-    ip: clientIpAddress,
-    geo: geo
-  }
-
-  socket.emit("cacca", datii)
-
-
-  console.log(geo);
+  (async () => {
+    var ipv4 = (await publicIp.v4());
+    var geo = geoip.lookup(su);
+    console.log(su, geo);
+  })();
 
   // receive the MOUSE POSITION from client and broadcast it to other clients
   // adding the USER ID
