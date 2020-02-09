@@ -4,7 +4,8 @@
 var socket; // socket of this CLIENT
 var bricks = []; // arry containing the bricks of the wall
 var cursors = []; // array containing cursors of other clients
-var reset; // reset buttont to restore the wall
+var reset, rightButton, leftButton; // reset buttont to restore the wall
+var canvas;
 var sound, soundNear, bg;
 var mySide;
 var peopleOnMySide = 0;
@@ -12,16 +13,17 @@ var peopleOnMySide = 0;
 //________________ PRELOAD, SETUP & DRAW ___________________________
 
 function preload(){
-  sound = loadSound('assets/stonehit.mp3')
-  soundNear = loadSound('assets/near.wav')
-  bg = loadImage('assets/back.png')
+  sound = loadSound('assets/stonehit.mp3');
+  soundNear = loadSound('assets/near.wav');
+  bg = loadImage('assets/back.png');
 }
 
 function setup() {
 
   // The canvas's width is 3 times bigger than the common windowWidth
-  var cnv = createCanvas(1200*3, 600);
-  cnv.parent('canvasContainer')
+  canvas = createCanvas(1200*3, 600);
+  canvas.id('wallCanvas');
+  canvas.parent('canvasContainer')
 
   // Firebase configuration
   var firebaseConfig = {
@@ -52,8 +54,38 @@ function setup() {
 
   // Create the button to reset the wall
   reset = createButton('reset');
-  reset.position(width/2, height/2);
+  reset.position(windowWidth/2, windowHeight - 100);
   reset.mousePressed(resetWall);
+
+  rightButton = createImg('./assets/arrowright.png');
+  rightButton.position(windowWidth-50, windowHeight/2);
+
+  leftButton = createImg('./assets/arrowleft.png');
+  leftButton.position(50, windowHeight/2);
+  leftButton.style('display', 'none');
+
+
+  rightButton.mousePressed(function() {
+    if (canvas.canvas.offsetLeft == -1200) {
+      var movement = -2400;
+      rightButton.style('display', 'none');
+    }else {
+      var movement = -1200
+      leftButton.style('display', 'block');
+    }
+    canvas.style('left',movement + 'px')
+  });
+
+  leftButton.mousePressed(function() {
+    if (canvas.canvas.offsetLeft == -1200) {
+      var movement = 0;
+      leftButton.style('display', 'none');
+    }else {
+      var movement = -1200
+      rightButton.style('display', 'block');
+    }
+    canvas.style('left',movement + 'px')
+  });
 
   //________________ SOCKETS LISTENERS ___________________________
 
@@ -325,7 +357,7 @@ function createTheWall() {
       var offset = 0;
     }
 
-    for (var i = 0; i <= 1200*3 - 50; i+=100) {
+    for (var i = 0; i <= 1200*3; i+=100) {
       var tempBrick = {
         x:i + offset,
         y:j,
