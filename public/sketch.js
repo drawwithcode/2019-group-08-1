@@ -20,7 +20,8 @@ function preload(){
 function setup() {
 
   // The canvas's width is 3 times bigger than the common windowWidth
-  createCanvas(1920*3, 1080);
+  var cnv = createCanvas(1200*3, 600);
+  cnv.parent('canvasContainer')
 
   // Firebase configuration
   var firebaseConfig = {
@@ -136,7 +137,6 @@ function draw() {
   for(var i = 0; i < bricks.length; i++){
     bricks[i].display();
   }
-
 }
 
 //________________ FUNCTIONS ___________________________
@@ -239,7 +239,9 @@ function Brick(_id, _x, _y, _stato) {
   // The display method draw the brick only if its state is true
   this.display = function() {
     if (this.stato == true) {
-      fill(255, 0, 0);
+      fill(210, 20, 20);
+      strokeWeight(10)
+      stroke(100,0,0)
       rect(this.x, this.y, this.w, this.h);
     }
   }
@@ -306,4 +308,32 @@ function Cursor(_x, _y, _id){
     fill(this.color);
     ellipse(this.x, this.y, 50);
   }
+}
+
+
+
+
+//________________ SPECIAL FUNCTION TO CREATE THE WALL ___________________________
+function createTheWall() {
+  var brickRef = firebase.database().ref('bricks');
+
+  for (var j = 0; j <= 550; j+=50) {
+
+    if ((j/50) % 2 == 1) {
+      var offset = -50;
+    }else {
+      var offset = 0;
+    }
+
+    for (var i = 0; i <= 1200*3 - 50; i+=100) {
+      var tempBrick = {
+        x:i + offset,
+        y:j,
+        stato: true
+      }
+
+      brickRef.push(tempBrick)
+    }
+  }
+
 }
