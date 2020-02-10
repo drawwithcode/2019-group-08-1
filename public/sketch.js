@@ -506,6 +506,7 @@ var palette = [
   {r: 20, g: 100, b: 34 }
 ]
 
+
 function Cursor(_x, _y, _id, _geo){
 
   // CURSOR ATTRIBUTES
