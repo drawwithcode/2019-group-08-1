@@ -9,6 +9,7 @@ var canvas;
 var sound, soundNear, bg;
 var mySide;
 var peopleOnMySide = 0;
+var statusDisplay = false; //says if the 'statusContainer' elemet is displayed or not
 
 //________________ PRELOAD, SETUP & DRAW ___________________________
 
@@ -49,6 +50,16 @@ function setup() {
   // with the informations stored in FIREBASE
   ref.once('value', createBricks);
 
+  // INCREMENT the number of TOTAL PARTECIPANTS
+  var partecipantsRef = firebase.database().ref('partecipants')
+  partecipantsRef.push(0)
+  partecipantsRef.on('value', function(data) {
+    var tot = Object.keys(data.val());
+    totNumber = ('000' + tot.length).substr(-3);
+    select('#totalNumber').html(totNumber);
+  })
+
+
   // Store the socket of this client
   socket = io.connect();
 
@@ -56,14 +67,16 @@ function setup() {
   reset = createButton('reset');
   reset.position(windowWidth/2, windowHeight - 100);
   reset.mousePressed(resetWall);
+  reset.parent('buttonContainer')
 
   rightButton = createImg('./assets/arrowright.png');
   rightButton.position(windowWidth-50, windowHeight/2);
+  rightButton.parent('buttonContainer')
 
   leftButton = createImg('./assets/arrowleft.png');
   leftButton.position(50, windowHeight/2);
   leftButton.style('display', 'none');
-
+  leftButton.parent('buttonContainer')
 
   rightButton.mousePressed(function() {
     if (canvas.canvas.offsetLeft == -1200) {
@@ -87,7 +100,34 @@ function setup() {
     canvas.style('left',movement + 'px')
   });
 
+  select('#statusButton').mousePressed(function() {
+    socket.emit('askPeopleOnline');
+    var bricksLeft=0;
+    for (var i = 0; i < bricks.length; i++) {
+      if (bricks[i].stato == true) {
+        bricksLeft++;
+      }
+    }
+    bricksLeft = ('000' + bricksLeft).substr(-3)
+    select('#bricks').html(bricksLeft);
+
+    var container = select('#statusContainer')
+    if (statusDisplay == true) {
+      container.style('top', '-100%');
+      statusDisplay = !statusDisplay;
+    }else {
+      container.style('top', '0');
+      statusDisplay = !statusDisplay;
+    }
+  })
+
   //________________ SOCKETS LISTENERS ___________________________
+
+  socket.on('peopleOnline', function(data) {
+    var peopleOnline = ('000' + data).substr(-3)
+    select('#onlineNumber').html(peopleOnline);
+
+  })
 
   socket.on('yourSide', function(data) {
     mySide = data.mySide;
@@ -169,6 +209,21 @@ function draw() {
   for(var i = 0; i < bricks.length; i++){
     bricks[i].display();
   }
+
+  var x = mouseX;
+  var y = mouseY;
+  noCursor()
+  noStroke()
+  fill(0,255,0,40)
+  ellipse(x,y,50)
+  fill(0,255,0,50)
+  ellipse(x,y,30)
+  fill(0,255,0,60)
+  ellipse(x,y,20)
+  fill(0,255,0,60)
+  ellipse(x,y,10)
+  fill(200,255,200,120)
+  ellipse(x,y,5)
 }
 
 //________________ FUNCTIONS ___________________________

@@ -20,7 +20,6 @@ var io = socket(server); // set the server socket
 // fires the "newConnection" function on each new connection
 io.sockets.on('connection', newConnection);
 
-
 //________________ NEW CONNECTION __________________________________
 
 var clientSide = true;
@@ -97,5 +96,9 @@ function newConnection(socket) {
     }else {
       sideFalse--;
     }
+  })
+
+  socket.on("askPeopleOnline", function() {
+    socket.emit("peopleOnline", sideTrue+sideFalse)
   })
 }

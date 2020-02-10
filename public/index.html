@@ -26,13 +26,75 @@
     #canvasContainer{
       width: 1200px;
       height: 600px;
-      background-color: peachpuff;
       position: absolute;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
       overflow: hidden;
       transition: 1s;
+    }
+
+    /*
+      STATUS PAGE POSITIONING
+    */
+    #statusButton{
+      position: fixed;
+      left: 95%;
+      top: 5%;
+      background-color: red;
+      transform: translate(-50%, -50%);
+      width: 10px;
+      height: 10px;
+    }
+
+    #statusContainer{
+      width: 100%;
+      height: 100%;
+      background-color: peachpuff;
+      position: absolute;
+      top: -100%;
+      overflow: hidden;
+      transition: 0.8s;
+    }
+    #onlineP{
+      display: flex;
+      position: absolute;
+      left: 60%;
+      top: 20%;
+      transform: translateY(-50%);
+    }
+    #totalP{
+      display: flex;
+      position: absolute;
+      left: 60%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    #bricksLeft{
+      display: flex;
+      position: absolute;
+      left: 60%;
+      top: 80%;
+      transform: translateY(-50%);
+    }
+
+    /*
+      TEXT AND NUMBERS STYLE
+    */
+
+    .numbers{
+      font-family: Roboto;
+      font-weight: bold;
+      font-size: 80px;
+      padding-right: 20px;
+    }
+    .text{
+      font-family: Roboto;
+      font-weight: normal;
+      font-size: 25px;
+      position: absolute;
+      bottom: 17px;
+      left: 150px;
     }
 
   </style>
@@ -44,10 +106,29 @@
   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-database.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:500&display=swap" rel="stylesheet">
   <script src="sketch.js"></script>
 </head>
 <body class="example">
   <div id="canvasContainer" class="example">
+
+  </div>
+  <div id="buttonContainer">
+
+  </div>
+  <div id="statusContainer">
+    <div id="onlineP">
+      <div id="onlineNumber" class="numbers">008</div><div class="text">Online<br>Parecipants</div>
+    </div>
+    <div id="totalP">
+      <div id="totalNumber" class="numbers">105</div><div class="text">Total<br>Parecipants</div>
+    </div>
+    <div id="bricksLeft">
+      <div id="bricks" class="numbers">240</div><div class="text">Bricks Left</div>
+    </div>
+
+  </div>
+  <div id="statusButton">
 
   </div>
 </body>
