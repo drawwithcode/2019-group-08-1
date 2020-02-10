@@ -498,12 +498,10 @@ function Aura(_x, _y){
 
 //________________ CURSOR OF OTHER USERS
 
+// Random COLOR of USERS
 var palette = [
-  {r: 70, g: 15, b: 255 },
-  {r: 20, g: 70, b: 89 },
-  {r: 90, g: 788, b: 47 },
-  {r: 205, g: 23, b: 56 },
-  {r: 20, g: 100, b: 34 }
+{r: 255, g:155, b:67},
+{r: 23, g: 255, b: 233}
 ]
 
 
