@@ -4,6 +4,8 @@
 var socket; // socket of this CLIENT
 var bricks = []; // arry containing the bricks of the wall
 var cursors = []; // array containing cursors of other clients
+var myCursor; //cursor of the user
+var auraCursor = []; //array containing the auras appearing when the user clicks
 var reset, rightButton, leftButton; // reset buttont to restore the wall
 var canvas;
 var sound, soundNear, bg;
@@ -87,6 +89,8 @@ function setup() {
     canvas.style('left',movement + 'px')
   });
 
+  myCursor = new myCursor();
+
   //________________ SOCKETS LISTENERS ___________________________
 
   socket.on('yourSide', function(data) {
@@ -163,11 +167,22 @@ function draw() {
   // Display the CURSORS
   for(var i = 0; i < cursors.length; i++){
     cursors[i].display();
+    cursors[i].update();
   }
 
   // Display the WALL
   for(var i = 0; i < bricks.length; i++){
     bricks[i].display();
+  }
+
+  //Display MY CURSOR
+  myCursor.display();
+  myCursor.update();
+
+  //Display my AURA
+  for (var i = 0; i < auraCursor.length; i++) {
+    var tempAura = auraCursor[i];
+    tempAura.display();
   }
 }
 
@@ -197,6 +212,14 @@ function mousePressed(){
   // Execute the "click" method for all the bricks
   for(var i =0; i < bricks.length; i++){
     bricks[i].click();
+  }
+
+  //A NEW AURA object is created and pushed into its ARRAY
+  var tempAura = new Aura();
+    auraCursor.push(tempAura);
+    //If the ARRAY has more than 3 elements, the oldest one DISAPPEARS
+    if (auraCursor.length > 3) {
+      auraCursor.splice(0,1);
   }
 }
 
@@ -247,7 +270,7 @@ function mousePos(data){
 
 //________________ CLASSES ___________________________
 
-//BRICKS OBJECTS THAT BUILD THE WALL
+//________________ BRICKS OBJECTS THAT BUILD THE WALL
 
 function Brick(_id, _x, _y, _stato) {
 
@@ -318,7 +341,65 @@ function Brick(_id, _x, _y, _stato) {
   }
 }
 
-// CURSOR OF ANOTHER USERS
+//________________ CURSOR OF MAIN USER
+
+function myCursor(_x, _y){
+  this.x = mouseX;
+  this.y = mouseY;
+  this.size = 50;
+
+  //Array containing the previous POSITIONS of the MOUSE
+  this.history = [];
+
+  //Method which updates the ARRAY pushing NEW POSITIONS
+  this.update = function(){
+    var prevPos = {
+      x: mouseX,
+      y: mouseY
+    }
+    this.history.push(prevPos);
+
+    //If the ARRAY has more than 30 objects, the oldest ones DISAPPEAR
+    if(this.history.length > 30){
+      this.history.splice(0,1);
+    }
+  }
+
+  //Method which DISPLAYS the CURSOR
+  this.display = function(){
+    //For cycle which creates ellipses out of the PREVIOUS POSITIONS
+    //The NEWEST POSITIONS create BIGGER ellipses
+    noStroke();
+    fill(	127, 255, 212, 30);
+    for(var i = 0; i < this.history.length; i++){
+      ellipse(this.history[i].x, this.history[i].y, i*2);
+    }
+    // ELLIPSE displaying the CURSOR
+    fill(	127, 255, 212, 240);
+    ellipse(mouseX, mouseY, 20);
+  }
+}
+
+//________________ AURA OF MAIN USER
+
+function Aura(_x, _y){
+  this.x = mouseX;
+  this.y = mouseY;
+  this.dim = 0;
+  this.opacity = 255;
+
+  //Method which DISPLAYS the AURA and makes it DISAPPEAR GRADUALLY
+  this.display = function(){
+    strokeWeight(2);
+    this.dim += 5;
+    this.opacity -= 10;
+    noFill();
+    stroke(127, 255, 212, this.opacity);
+    ellipse(this.x, this.y, this.dim);
+  }
+}
+
+//________________ CURSOR OF OTHER USERS
 
 function Cursor(_x, _y, _id){
 
@@ -330,15 +411,37 @@ function Cursor(_x, _y, _id){
   // Cursor's unique ID equal to it's SOCKET ID
   this.id = _id;
   // Random color
-  this.color = color(random(255), random(255), random(255));
+  var r = random(255);
+  var g = random(255);
+  var b = random(255);
+
+  this.size = 30;
+
+  this.history = [];
 
   // CURSOR METHODS
+  //UPDATE
+  this.update = function(){
+    var prevPos = {
+      x: this.x,
+      y: this.y
+    }
+    this.history.push(prevPos);
+    if(this.history.length > 30){
+      this.history.splice(0,1);
+    }
+  }
 
   // DISPLAY
   // Draw the cursor with it's color
   this.display = function(){
-    fill(this.color);
-    ellipse(this.x, this.y, 50);
+    noStroke();
+    fill(r, g, b, 30);
+    for(var i = 0; i < this.history.length; i++){
+      ellipse(this.history[i].x, this.history[i].y, i*2);
+    }
+    fill(r, g, b, 240);
+    ellipse(this.x, this.y, 20);
   }
 }
 
