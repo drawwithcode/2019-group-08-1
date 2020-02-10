@@ -6,18 +6,19 @@ var bricks = []; // arry containing the bricks of the wall
 var cursors = []; // array containing cursors of other clients
 var myCursor; //cursor of the user
 var auraCursor = []; //array containing the auras appearing when the user clicks
-var reset, rightButton, leftButton; // reset buttont to restore the wall
+var rightButton, leftButton; // Buttons to move the canvas
 var canvas;
-var sound, soundNear, bg;
-var mySide;
+var soundFar, soundMedium, soundNear;
+var mySide, myGeoPosition;
 var peopleOnMySide = 0;
 var statusDisplay = false; //says if the 'statusContainer' elemet is displayed or not
 
 //________________ PRELOAD, SETUP & DRAW ___________________________
 
 function preload(){
-  sound = loadSound('assets/stonehit.mp3');
-  soundNear = loadSound('assets/near.wav');
+  soundFar = loadSound('assets/soundfar.mp3');
+  soundMedium = loadSound('assets/soundmedium.mp3');
+  soundNear = loadSound('assets/soundnear.mp3');
 }
 
 function setup() {
@@ -26,6 +27,7 @@ function setup() {
   canvas = createCanvas(1200*3, 600);
   canvas.id('wallCanvas');
   canvas.parent('canvasContainer')
+  canvas.style('left', '-1200px')
 
   // Firebase configuration
   var firebaseConfig = {
@@ -64,19 +66,19 @@ function setup() {
   // Store the socket of this client
   socket = io.connect();
 
-  // Create the button to reset the wall
-  reset = createButton('reset');
-  reset.position(windowWidth/2, windowHeight - 100);
-  reset.mousePressed(resetWall);
-  reset.parent('buttonContainer')
-
   rightButton = createImg('./assets/arrowright.png');
-  rightButton.position(windowWidth-50, windowHeight/2);
+  rightButton.style('position', 'absolute');
+  rightButton.style('top', '50%');
+  rightButton.style('left', '97%');
+  rightButton.style('transform', 'translateX(-50%)');
   rightButton.parent('buttonContainer')
 
   leftButton = createImg('./assets/arrowleft.png');
   leftButton.position(50, windowHeight/2);
-  leftButton.style('display', 'none');
+  leftButton.style('position', 'absolute');
+  leftButton.style('top', '50%');
+  leftButton.style('left', '3%');
+  leftButton.style('transform', 'translateX(-50%)');
   leftButton.parent('buttonContainer')
 
   rightButton.mousePressed(function() {
@@ -136,6 +138,10 @@ function setup() {
 
   })
 
+  socket.on('yourGeoPosition', function(data) {
+    myGeoPosition = data;
+  })
+
   socket.on('yourSide', function(data) {
     mySide = data.mySide;
     peopleOnMySide = data.peopleOnMySide;
@@ -176,18 +182,17 @@ function setup() {
       var clickDistance = dist(mouseX, mouseY, data.x, data.y)
       if (minDistance >= clickDistance - 50 && minDistance <= clickDistance + 50) {
 
-        var span = 1000
+        var far = 1000;
+        var medium = 500;
         var near = 100;
-        if (clickDistance < span) {
           if (clickDistance <= near) {
             soundNear.play();
-          }else{
-            var vol = map(clickDistance,0,span,2,0.1);
-            sound.setVolume(vol)
-            sound.play();
-            console.log(clickDistance);
+          }else if (clickDistance <= medium) {
+            soundMedium.play();
+          }else if (clickDistance <= far) {
+            soundFar.play();
           }
-        }
+
       }
 
     }
@@ -201,7 +206,8 @@ function draw() {
   var mousePosition = {
     x: mouseX,
     y: mouseY,
-    side: mySide
+    side: mySide,
+    geo: myGeoPosition
   }
   socket.emit('mouse', mousePosition);
 
@@ -298,13 +304,14 @@ function mousePos(data){
     // If no cursor with that ID is find ---> "getPos" is set to undefined
     // so create a new cursor with that ID
     if (getPos == undefined) {
-      var tempCursor = new Cursor(data.x, data.y, data.id); // Create new cursor
+      var tempCursor = new Cursor(data.x, data.y, data.id, data.geo); // Create new cursor
       cursors.push(tempCursor); // Push it on the "cursors" array
     }
-    // If there is a cursor with that ID update the position
+    // If there is a cursor with that ID update the position and country
     else {
       getPos.x = data.x;
       getPos.y = data.y;
+      getPos.geo = data.geo;
     }
 
   }
@@ -414,17 +421,17 @@ function myCursor(_x, _y){
     noStroke();
     fill(	127, 255, 212, 30);
     for(var i = 0; i < this.history.length; i++){
-      ellipse(this.history[i].x, this.history[i].y, i*2);
+      ellipse(this.history[i].x, this.history[i].y, i*2.5);
     }
     // ELLIPSE displaying the CURSOR
     fill(	127, 255, 212, 240);
     var x = mouseX;
     var y = mouseY;
-    ellipse(x, y, 20);
+    ellipse(x, y, 30);
     strokeWeight(1);
-    stroke("blue");
-    line(x-3,y,x+3,y);
-    line(x,y-3,x,y+3);
+    stroke(0);
+    line(x-3.5,y,x+3.5,y);
+    line(x,y-3.5,x,y+3.5);
   }
 }
 
@@ -449,7 +456,7 @@ function Aura(_x, _y){
 
 //________________ CURSOR OF OTHER USERS
 
-function Cursor(_x, _y, _id){
+function Cursor(_x, _y, _id, _geo){
 
   // CURSOR ATTRIBUTES
 
@@ -458,6 +465,7 @@ function Cursor(_x, _y, _id){
   this.y = _y;
   // Cursor's unique ID equal to it's SOCKET ID
   this.id = _id;
+  this.geo = _geo;
   // Random color
   var r = random(255);
   var g = random(255);
@@ -490,6 +498,13 @@ function Cursor(_x, _y, _id){
     }
     fill(r, g, b, 240);
     ellipse(this.x, this.y, 20);
+
+    if (mouseX > this.x - 30 && mouseX < this.x + 30) {
+      if (mouseY > this.y - 30 && mouseY < this.y + 30) {
+        textSize(100)
+        text(this.geo,this.x,this.y)
+      }
+    }
   }
 }
 
