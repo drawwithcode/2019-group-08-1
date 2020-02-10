@@ -24,6 +24,7 @@
     }
 
     #canvasContainer{
+      background-image: linear-gradient(#b49dfc, #5351bf);
       width: 1200px;
       height: 600px;
       position: absolute;
@@ -97,6 +98,46 @@
       left: 150px;
     }
 
+    /*
+      CLASSES OF PARALLAX BTACKGROUND
+    */
+    .imagepos1{
+      position: absolute;
+      bottom:30px;
+      transition: 1s;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .imagepos2{
+      position: absolute;
+      left:0px;
+      bottom:0px;
+      transition: 1s;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .imagepos3{
+      position: absolute;
+      left:0px;
+      transition: 1s;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
   </style>
   <script src="addons/p5.min.js"></script>
   <script src="addons/p5.sound.min.js"></script>
@@ -111,7 +152,9 @@
 </head>
 <body class="example">
   <div id="canvasContainer" class="example">
-
+    <img src="./assets/Sfondo1.png" class="imagepos1" id="sfondo1" alt=""></img>
+    <img src="./assets/Sfondo2.png" class="imagepos2" id="sfondo2" alt=""></img>
+    <img src="./assets/Sfondo3.png" class="imagepos3" id="sfondo3" alt=""></img>
   </div>
   <div id="buttonContainer">
 

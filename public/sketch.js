@@ -18,7 +18,6 @@ var statusDisplay = false; //says if the 'statusContainer' elemet is displayed o
 function preload(){
   sound = loadSound('assets/stonehit.mp3');
   soundNear = loadSound('assets/near.wav');
-  bg = loadImage('assets/back.png');
 }
 
 function setup() {
@@ -88,7 +87,9 @@ function setup() {
       var movement = -1200
       leftButton.style('display', 'block');
     }
-    canvas.style('left',movement + 'px')
+    canvas.style('left',movement + 'px');
+    select('#sfondo2').style('left',movement/4 + 'px');
+    select('#sfondo3').style('left',movement+ 'px');
   });
 
   leftButton.mousePressed(function() {
@@ -99,7 +100,9 @@ function setup() {
       var movement = -1200
       rightButton.style('display', 'block');
     }
-    canvas.style('left',movement + 'px')
+    canvas.style('left',movement + 'px');
+    select('#sfondo2').style('left',movement/4 + 'px');
+    select('#sfondo3').style('left',movement+ 'px');
   });
 
   select('#statusButton').mousePressed(function() {
@@ -193,9 +196,7 @@ function setup() {
 }
 
 function draw() {
-
-  background('black');
-  image(bg,0,0)
+  clear();
   // Emit the mouse position to the server
   var mousePosition = {
     x: mouseX,
@@ -216,6 +217,7 @@ function draw() {
   }
 
   //Display MY CURSOR
+  noCursor();
   myCursor.display();
   myCursor.update();
 
@@ -334,9 +336,9 @@ function Brick(_id, _x, _y, _stato) {
   // The display method draw the brick only if its state is true
   this.display = function() {
     if (this.stato == true) {
-      fill(210, 20, 20);
+      fill('#211e36');
       strokeWeight(10)
-      stroke(100,0,0)
+      stroke('#080604')
       rect(this.x, this.y, this.w, this.h);
     }
   }
@@ -416,7 +418,13 @@ function myCursor(_x, _y){
     }
     // ELLIPSE displaying the CURSOR
     fill(	127, 255, 212, 240);
-    ellipse(mouseX, mouseY, 20);
+    var x = mouseX;
+    var y = mouseY;
+    ellipse(x, y, 20);
+    strokeWeight(1);
+    stroke("blue");
+    line(x-3,y,x+3,y);
+    line(x,y-3,x,y+3);
   }
 }
 
