@@ -11,6 +11,7 @@ var canvas;
 var sound, soundNear, bg;
 var mySide;
 var peopleOnMySide = 0;
+var statusDisplay = false; //says if the 'statusContainer' elemet is displayed or not
 
 //________________ PRELOAD, SETUP & DRAW ___________________________
 
@@ -50,6 +51,16 @@ function setup() {
   // with the informations stored in FIREBASE
   ref.once('value', createBricks);
 
+  // INCREMENT the number of TOTAL PARTECIPANTS
+  var partecipantsRef = firebase.database().ref('partecipants')
+  partecipantsRef.push(0)
+  partecipantsRef.on('value', function(data) {
+    var tot = Object.keys(data.val());
+    totNumber = ('000' + tot.length).substr(-3);
+    select('#totalNumber').html(totNumber);
+  })
+
+
   // Store the socket of this client
   socket = io.connect();
 
@@ -57,14 +68,16 @@ function setup() {
   reset = createButton('reset');
   reset.position(windowWidth/2, windowHeight - 100);
   reset.mousePressed(resetWall);
+  reset.parent('buttonContainer')
 
   rightButton = createImg('./assets/arrowright.png');
   rightButton.position(windowWidth-50, windowHeight/2);
+  rightButton.parent('buttonContainer')
 
   leftButton = createImg('./assets/arrowleft.png');
   leftButton.position(50, windowHeight/2);
   leftButton.style('display', 'none');
-
+  leftButton.parent('buttonContainer')
 
   rightButton.mousePressed(function() {
     if (canvas.canvas.offsetLeft == -1200) {
@@ -74,7 +87,9 @@ function setup() {
       var movement = -1200
       leftButton.style('display', 'block');
     }
-    canvas.style('left',movement + 'px')
+    canvas.style('left',movement + 'px');
+    select('#sfondo2').style('left',movement/4 + 'px');
+    select('#sfondo3').style('left',movement+ 'px');
   });
 
   leftButton.mousePressed(function() {
@@ -85,12 +100,41 @@ function setup() {
       var movement = -1200
       rightButton.style('display', 'block');
     }
-    canvas.style('left',movement + 'px')
+    canvas.style('left',movement + 'px');
+    select('#sfondo2').style('left',movement/4 + 'px');
+    select('#sfondo3').style('left',movement+ 'px');
   });
+
+  select('#statusButton').mousePressed(function() {
+    socket.emit('askPeopleOnline');
+    var bricksLeft=0;
+    for (var i = 0; i < bricks.length; i++) {
+      if (bricks[i].stato == true) {
+        bricksLeft++;
+      }
+    }
+    bricksLeft = ('000' + bricksLeft).substr(-3)
+    select('#bricks').html(bricksLeft);
+
+    var container = select('#statusContainer')
+    if (statusDisplay == true) {
+      container.style('top', '-100%');
+      statusDisplay = !statusDisplay;
+    }else {
+      container.style('top', '0');
+      statusDisplay = !statusDisplay;
+    }
+  })
 
   myCursor = new myCursor();
 
   //________________ SOCKETS LISTENERS ___________________________
+
+  socket.on('peopleOnline', function(data) {
+    var peopleOnline = ('000' + data).substr(-3)
+    select('#onlineNumber').html(peopleOnline);
+
+  })
 
   socket.on('yourSide', function(data) {
     mySide = data.mySide;
@@ -152,9 +196,7 @@ function setup() {
 }
 
 function draw() {
-
-  background('black');
-  image(bg,0,0)
+  clear();
   // Emit the mouse position to the server
   var mousePosition = {
     x: mouseX,
@@ -175,6 +217,7 @@ function draw() {
   }
 
   //Display MY CURSOR
+  noCursor();
   myCursor.display();
   myCursor.update();
 
@@ -293,9 +336,9 @@ function Brick(_id, _x, _y, _stato) {
   // The display method draw the brick only if its state is true
   this.display = function() {
     if (this.stato == true) {
-      fill(210, 20, 20);
+      fill('#211e36');
       strokeWeight(10)
-      stroke(100,0,0)
+      stroke('#080604')
       rect(this.x, this.y, this.w, this.h);
     }
   }
@@ -375,7 +418,13 @@ function myCursor(_x, _y){
     }
     // ELLIPSE displaying the CURSOR
     fill(	127, 255, 212, 240);
-    ellipse(mouseX, mouseY, 20);
+    var x = mouseX;
+    var y = mouseY;
+    ellipse(x, y, 20);
+    strokeWeight(1);
+    stroke("blue");
+    line(x-3,y,x+3,y);
+    line(x,y-3,x,y+3);
   }
 }
 
