@@ -17,7 +17,6 @@ var peopleOnMySide = 0;
 function preload(){
   sound = loadSound('assets/stonehit.mp3');
   soundNear = loadSound('assets/near.wav');
-  bg = loadImage('assets/back.png');
 }
 
 function setup() {
