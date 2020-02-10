@@ -8,7 +8,7 @@
     body {
       padding: 0;
       margin: 0;
-      background-color: black;
+      background-color: #0E0C19;
       overflow-x: hidden;
       transition: 1s;
     }
@@ -35,6 +35,20 @@
       transition: 1s;
     }
 
+    #countDown{
+      color: #A2FFFF;
+      font-family: Roboto;
+      font-weight: normal;
+      font-size: 25px;
+      position: absolute;
+      padding-left: 10px;
+      padding-top: 10px;
+    }
+
+    #countDown:hover{
+      cursor: none;
+    }
+
     /*
       STATUS PAGE POSITIONING
     */
@@ -56,7 +70,7 @@
     #statusContainer{
       width: 100%;
       height: 100%;
-      background-color: peachpuff;
+      background-color: #2A264B;
       position: absolute;
       top: -100%;
       overflow: hidden;
@@ -89,12 +103,14 @@
     */
 
     .numbers{
+      color: #A2FFFF;
       font-family: Roboto;
       font-weight: bold;
       font-size: 80px;
       padding-right: 20px;
     }
     .text{
+      color: #A2FFFF;
       font-family: Roboto;
       font-weight: normal;
       font-size: 25px;
@@ -161,15 +177,19 @@
     <img src="./assets/Sfondo2.png" class="imagepos2" id="sfondo2" alt=""></img>
     <img src="./assets/Sfondo3.png" class="imagepos3" id="sfondo3" alt=""></img>
   </div>
+
+  <div id="countDown">
+  </div>
+
   <div id="buttonContainer">
 
   </div>
   <div id="statusContainer">
     <div id="onlineP">
-      <div id="onlineNumber" class="numbers">008</div><div class="text">Online<br>Parecipants</div>
+      <div id="onlineNumber" class="numbers">008</div><div class="text">Online<br>Players</div>
     </div>
     <div id="totalP">
-      <div id="totalNumber" class="numbers">105</div><div class="text">Total<br>Parecipants</div>
+      <div id="totalNumber" class="numbers">105</div><div class="text">Total<br>Players</div>
     </div>
     <div id="bricksLeft">
       <div id="bricks" class="numbers">240</div><div class="text">Bricks Left</div>

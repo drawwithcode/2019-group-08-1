@@ -128,6 +128,8 @@ function setup() {
     }
   })
 
+
+
   myCursor = new myCursor();
 
   //________________ SOCKETS LISTENERS ___________________________
@@ -232,6 +234,17 @@ function draw() {
     var tempAura = auraCursor[i];
     tempAura.display();
   }
+
+  if (frameCount % 60 == 0 && timer > 0) {
+        timer --;
+    }
+
+    if (timer == 0) {
+
+    } else {
+        countDown();
+    }
+
 }
 
 //________________ FUNCTIONS ___________________________
@@ -253,6 +266,35 @@ function createBricks(data){
     bricks.push(tempBrick); // store the brick in the wall
   }
 }
+
+var timeLeft = function(){
+    var currentDate = new Date();
+    currentDate = currentDate.getTime();
+    var endDate = new Date("2020-02-13T00:00:00");
+    if (parseInt((endDate-currentDate)/1000)<0){return 0};
+    return parseInt((endDate-currentDate)/1000);
+}
+
+var timerText = function(){
+    var h = String(parseInt(timer / 3600));
+    var m = String(parseInt(timer / 60)%60);
+    var s = String(timer - 3600*h - 60*m);
+
+    if (h.length == 1){h="0"+h;};
+    if (m.length == 1){m="0"+m;};
+    if (s.length == 1){s="0"+s;};
+
+
+    return h+"h "+m+"m "+s+"s";
+
+}
+
+function countDown(){
+    select('#countDown').html(timerText());
+    select('#countDown').parent('#canvasContainer');
+}
+
+var timer = timeLeft();
 
 // FIRES THE "CLICK" METHOD OF THE BRICKS WHEN THE USER CLICKS
 
@@ -345,7 +387,7 @@ function Brick(_id, _x, _y, _stato) {
     if (this.stato == true) {
       fill('#211e36');
       strokeWeight(10)
-      stroke('#080604')
+      stroke('#0E0C19')
       rect(this.x, this.y, this.w, this.h);
     }
   }
@@ -456,6 +498,14 @@ function Aura(_x, _y){
 
 //________________ CURSOR OF OTHER USERS
 
+var palette = [
+  {r: 70, g: 15, b: 255 },
+  {r: 20, g: 70, b: 89 },
+  {r: 90, g: 788, b: 47 },
+  {r: 205, g: 23, b: 56 },
+  {r: 20, g: 100, b: 34 }
+]
+
 function Cursor(_x, _y, _id, _geo){
 
   // CURSOR ATTRIBUTES
@@ -467,10 +517,8 @@ function Cursor(_x, _y, _id, _geo){
   this.id = _id;
   this.geo = _geo;
   // Random color
-  var r = random(255);
-  var g = random(255);
-  var b = random(255);
-
+  this.color = palette[round(random(palette.length))]
+  console.log(this.color);
   this.size = 30;
 
   this.history = [];
@@ -492,11 +540,11 @@ function Cursor(_x, _y, _id, _geo){
   // Draw the cursor with it's color
   this.display = function(){
     noStroke();
-    fill(r, g, b, 30);
+    fill(this.color.r, this.color.g, this.color.b, 30);
     for(var i = 0; i < this.history.length; i++){
       ellipse(this.history[i].x, this.history[i].y, i*2);
     }
-    fill(r, g, b, 240);
+    fill(this.color.r, this.color.g, this.color.b, 150);
     ellipse(this.x, this.y, 20);
 
     if (mouseX > this.x - 30 && mouseX < this.x + 30) {
