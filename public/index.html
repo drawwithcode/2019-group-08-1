@@ -60,6 +60,12 @@
     /*
       STATUS PAGE POSITIONING
     */
+    #logo{
+      position: absolute;
+      top: 10%;
+      left: 10%;
+    }
+
     #statusButton{
       position: fixed;
       left: 97%;
@@ -87,23 +93,20 @@
     #onlineP{
       display: flex;
       position: absolute;
-      left: 60%;
-      top: 20%;
-      transform: translateY(-50%);
+      left: 70%;
+      top: 8%;
     }
     #totalP{
       display: flex;
       position: absolute;
-      left: 60%;
-      top: 50%;
-      transform: translateY(-50%);
+      left: 70%;
+      top: 38%;
     }
     #bricksLeft{
       display: flex;
       position: absolute;
-      left: 60%;
-      top: 80%;
-      transform: translateY(-50%);
+      left: 70%;
+      top: 68%;
     }
 
     /*
@@ -184,6 +187,7 @@
     <div id="bricksLeft">
       <div id="bricks" class="numbers unselect">240</div><div class="text unselect">Bricks Left</div>
     </div>
+    <img src="assets/logo.png" id="logo">
 
   </div>
   <div id="statusButton" class="unselect">i</div>

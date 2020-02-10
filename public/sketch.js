@@ -8,14 +8,14 @@ var myCursor; //cursor of the user
 var auraCursor = []; //array containing the auras appearing when the user clicks
 var rightButton, leftButton; // Buttons to move the canvas
 var canvas;
-var soundFar, soundMedium, soundNear;
-var mySide, myGeoPosition;
-var peopleOnMySide = 0;
+var soundFar, soundMedium, soundNear; // Store the sund files
+var mySide; // My side of the wall
 var statusDisplay = false; //says if the 'statusContainer' elemet is displayed or not
 
 //________________ PRELOAD, SETUP & DRAW ___________________________
 
 function preload(){
+  // Load SOUNDS
   soundFar = loadSound('assets/soundfar.mp3');
   soundMedium = loadSound('assets/soundmedium.mp3');
   soundNear = loadSound('assets/soundnear.mp3');
@@ -25,6 +25,7 @@ function setup() {
 
   // The canvas's width is 3 times bigger than the common windowWidth
   canvas = createCanvas(1200*3, 600);
+  // Positioning the canvas in the HTML
   canvas.id('wallCanvas');
   canvas.parent('canvasContainer')
   canvas.style('left', '-1200px')
@@ -56,10 +57,11 @@ function setup() {
   // INCREMENT the number of TOTAL PARTECIPANTS
   var partecipantsRef = firebase.database().ref('partecipants')
   partecipantsRef.push(0)
+  // Refersh the value on every new partecipant
   partecipantsRef.on('value', function(data) {
-    var tot = Object.keys(data.val());
-    totNumber = ('000' + tot.length).substr(-3);
-    select('#totalNumber').html(totNumber);
+    var tot = Object.keys(data.val()); // Take the number from firebase
+    totNumber = ('000' + tot.length).substr(-3); // Set the number to three digits
+    select('#totalNumber').html(totNumber); // Change the html
   })
 
 
@@ -121,9 +123,11 @@ function setup() {
     var container = select('#statusContainer')
     if (statusDisplay == true) {
       container.style('top', '-100%');
+      select('#statusButton').html('i')
       statusDisplay = !statusDisplay;
     }else {
       container.style('top', '0');
+      select('#statusButton').html('x')
       statusDisplay = !statusDisplay;
     }
   })
@@ -140,19 +144,8 @@ function setup() {
 
   })
 
-  socket.on('yourGeoPosition', function(data) {
-    myGeoPosition = data;
-  })
-
   socket.on('yourSide', function(data) {
-    mySide = data.mySide;
-    peopleOnMySide = data.peopleOnMySide;
-  })
-
-  socket.on('newPlayer', function(data) {
-    if (data == mySide) {
-      peopleOnMySide++;
-    }
+    mySide = data;
   })
 
   // Receive the ID of the brick to destroy
@@ -165,9 +158,6 @@ function setup() {
   // Receive the ID of user that disconnected
   // and remove it from the CURSORS array
   socket.on('deleteCursor', function(data) {
-    if (data.side == mySide) {
-      peopleOnMySide--;
-    }
     var getPos = cursors.findIndex(cursor => cursor.id === data.id);
     cursors.splice(getPos, 1)
   })
@@ -209,7 +199,6 @@ function draw() {
     x: mouseX,
     y: mouseY,
     side: mySide,
-    geo: myGeoPosition
   }
   socket.emit('mouse', mousePosition);
 
@@ -346,14 +335,13 @@ function mousePos(data){
     // If no cursor with that ID is find ---> "getPos" is set to undefined
     // so create a new cursor with that ID
     if (getPos == undefined) {
-      var tempCursor = new Cursor(data.x, data.y, data.id, data.geo); // Create new cursor
+      var tempCursor = new Cursor(data.x, data.y, data.id); // Create new cursor
       cursors.push(tempCursor); // Push it on the "cursors" array
     }
     // If there is a cursor with that ID update the position and country
     else {
       getPos.x = data.x;
       getPos.y = data.y;
-      getPos.geo = data.geo;
     }
 
   }
@@ -509,7 +497,7 @@ var palette = [
 ]
 
 
-function Cursor(_x, _y, _id, _geo){
+function Cursor(_x, _y, _id){
 
   // CURSOR ATTRIBUTES
 
@@ -518,9 +506,8 @@ function Cursor(_x, _y, _id, _geo){
   this.y = _y;
   // Cursor's unique ID equal to it's SOCKET ID
   this.id = _id;
-  this.geo = _geo;
   // Random color
-  this.color = palette[round(random(palette.length))]
+  this.color = palette[round(random(palette.length-1))]
   console.log(this.color);
   this.size = 30;
 
@@ -550,12 +537,6 @@ function Cursor(_x, _y, _id, _geo){
     fill(this.color.r, this.color.g, this.color.b, 150);
     ellipse(this.x, this.y, 20);
 
-    if (mouseX > this.x - 30 && mouseX < this.x + 30) {
-      if (mouseY > this.y - 30 && mouseY < this.y + 30) {
-        textSize(100)
-        text(this.geo,this.x,this.y)
-      }
-    }
   }
 }
 
