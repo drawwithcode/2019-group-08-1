@@ -6,7 +6,7 @@ var bricks = []; // arry containing the bricks of the wall
 var cursors = []; // array containing cursors of other clients
 var myCursor; //cursor of the user
 var auraCursor = []; //array containing the auras appearing when the user clicks
-var reset, rightButton, leftButton; // reset buttont to restore the wall
+var reset, rightButton, leftButton; // reset button to restore the wall
 var canvas;
 var sound, soundNear, bg;
 var mySide;
@@ -126,6 +126,8 @@ function setup() {
     }
   })
 
+
+
   myCursor = new myCursor();
 
   //________________ SOCKETS LISTENERS ___________________________
@@ -226,6 +228,17 @@ function draw() {
     var tempAura = auraCursor[i];
     tempAura.display();
   }
+
+  if (frameCount % 60 == 0 && timer > 0) {
+        timer --;
+    }
+
+    if (timer == 0) {
+
+    } else {
+        countDown();
+    }
+
 }
 
 //________________ FUNCTIONS ___________________________
@@ -247,6 +260,35 @@ function createBricks(data){
     bricks.push(tempBrick); // store the brick in the wall
   }
 }
+
+var timeLeft = function(){
+    var currentDate = new Date();
+    currentDate = currentDate.getTime();
+    var endDate = new Date("2020-02-13T00:00:00");
+    if (parseInt((endDate-currentDate)/1000)<0){return 0};
+    return parseInt((endDate-currentDate)/1000);
+}
+
+var timerText = function(){
+    var h = String(parseInt(timer / 3600));
+    var m = String(parseInt(timer / 60)%60);
+    var s = String(timer - 3600*h - 60*m);
+
+    if (h.length == 1){h="0"+h;};
+    if (m.length == 1){m="0"+m;};
+    if (s.length == 1){s="0"+s;};
+
+
+    return h+"h "+m+"m "+s+"s";
+
+}
+
+function countDown(){
+    select('#countDown').html(timerText());
+    select('#countDown').parent('#canvasContainer');
+}
+
+var timer = timeLeft();
 
 // FIRES THE "CLICK" METHOD OF THE BRICKS WHEN THE USER CLICKS
 
@@ -338,7 +380,7 @@ function Brick(_id, _x, _y, _stato) {
     if (this.stato == true) {
       fill('#211e36');
       strokeWeight(10)
-      stroke('#080604')
+      stroke('#0E0C19')
       rect(this.x, this.y, this.w, this.h);
     }
   }
@@ -484,11 +526,12 @@ function Cursor(_x, _y, _id){
   // Draw the cursor with it's color
   this.display = function(){
     noStroke();
-    fill(r, g, b, 30);
+    var ca = constrain(255 + 30, 0, 250);
+            fill(ca, 0, 150);
     for(var i = 0; i < this.history.length; i++){
       ellipse(this.history[i].x, this.history[i].y, i*2);
     }
-    fill(r, g, b, 240);
+    fill(255, 0, 150, 30);
     ellipse(this.x, this.y, 20);
   }
 }
