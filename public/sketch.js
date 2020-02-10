@@ -491,6 +491,12 @@ function Aura(_x, _y){
 
 //________________ CURSOR OF OTHER USERS
 
+// Random COLOR of USERS
+var palette = [
+{r: 255, g:155, b:67},
+{r: 23, g: 255, b: 233}
+]
+
 function Cursor(_x, _y, _id){
 
   // CURSOR ATTRIBUTES
@@ -500,10 +506,6 @@ function Cursor(_x, _y, _id){
   this.y = _y;
   // Cursor's unique ID equal to it's SOCKET ID
   this.id = _id;
-  // Random color
-  var r = random(255);
-  var g = random(255);
-  var b = random(255);
 
   this.size = 30;
 
@@ -526,12 +528,11 @@ function Cursor(_x, _y, _id){
   // Draw the cursor with it's color
   this.display = function(){
     noStroke();
-    var ca = constrain(255 + 30, 0, 250);
-            fill(ca, 0, 150);
+    fill(random(palette), 30);
     for(var i = 0; i < this.history.length; i++){
       ellipse(this.history[i].x, this.history[i].y, i*2);
     }
-    fill(255, 0, 150, 30);
+    fill(random(palette), 240);
     ellipse(this.x, this.y, 20);
   }
 }
