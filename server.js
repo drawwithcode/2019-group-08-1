@@ -34,7 +34,7 @@ function newConnection(socket) {
   (async () => {
     var ipv4 = (await publicIp.v4());
     var geo = geoip.lookup(ipv4);
-    // console.log(ipv4, geo);
+    socket.emit('yourGeoPosition', geo.country)
   })();
 
   if (sideTrue < sideFalse) {
@@ -67,7 +67,8 @@ function newConnection(socket) {
       x: data.x,
       y: data.y,
       id: socket.id,
-      side: data.side
+      side: data.side,
+      geo: data.geo
     }
 
     socket.broadcast.emit('posMouse', mouseData);
