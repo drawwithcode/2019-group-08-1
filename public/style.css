@@ -1,0 +1,268 @@
+/*
+  ____________________________________________ BODY
+*/
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #0E0C19;
+  overflow-x: hidden;
+  transition: 1s;
+}
+/*
+  ____________________________________________ UTILITY CLASSES
+*/
+
+/* for UNSELECTABLE items */
+.unselect{
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* to HIDE the TOOLBAR */
+.noToolbar::-webkit-scrollbar {
+  display: none;
+}
+/*
+  ____________________________________________ CANVAS CONTAINER
+*/
+
+#canvasContainer{
+  /* dimensions and positioning */
+  width: 1200px;
+  height: 600px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  /* gradient for the back */
+  background-image: linear-gradient(#b49dfc, #5351bf);
+  /* transition value for the animation */
+  transition: 1s;
+}
+
+/* ID of the canvas where there is the wall */
+#wallCanvas{
+  position: absolute;
+  transition: 1s;
+}
+
+#countDown{
+  /* style */
+  color: #A2FFFF;
+  font-family: Roboto;
+  font-weight: bold;
+  font-size: 25px;
+  /* positioning */
+  position: absolute;
+  padding-left: 10px;
+  padding-top: 10px;
+  /* no cursor when hovering the countDown */
+  cursor: none;
+}
+
+/*
+  CLASSES OF PARALLAX BTACKGROUND
+*/
+.imagepos1{
+  position: absolute;
+  bottom:30px;
+  transition: 1s;
+}
+.imagepos2{
+  position: absolute;
+  left:0px;
+  bottom:0px;
+  transition: 1s;
+}
+.imagepos3{
+  position: absolute;
+  left:0px;
+  transition: 1s;
+}
+
+/*
+  ____________________________________________ STATUS PAGE
+*/
+/* STATUS WINDOW */
+#statusContainer{
+  background-color: #2A264B;
+  /* dimensions and positioning */
+  position: absolute;
+  top: -100%;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* transition value */
+  transition: 0.8s;
+}
+
+/* Button that displays the status window */
+#statusButton{
+  /* style */
+  color: #a2ffff;
+  font-family: Roboto;
+  font-weight: bold;
+  font-size: 25px;
+  /* dimensions and positioning */
+  position: fixed;
+  left: 97%;
+  top: 5%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  padding: 10px;
+  /* pointer cursor on hover */
+  cursor: pointer;
+}
+
+/* Break the wall logo */
+#logo{
+  position: absolute;
+  top: 10%;
+  left: 10%;
+}
+
+/* Break the wall description */
+#wallDescription{
+  /* style */
+  color: #7aadbf;
+  font-family: Roboto;
+  font-weight: light;
+  font-size: 20px;
+  /* dimensions and positioning */
+  position: absolute;
+  top: 66.5%;
+  left: 10.5%;
+  width: 550px
+}
+
+/* COUNTERS CONTAINERS positioning
+    ->Players Online
+    ->Total Players
+    ->Bricks left
+*/
+#onlineP{
+  display: flex;
+  position: absolute;
+  left: 70%;
+  top: 8%;
+}
+#totalP{
+  display: flex;
+  position: absolute;
+  left: 70%;
+  top: 38%;
+}
+#bricksLeft{
+  display: flex;
+  position: absolute;
+  left: 70%;
+  top: 68%;
+}
+
+/* finals texts positioning */
+#goodFinal{
+  position:absolute;
+  top:50%;
+  left:50%;
+}
+#badFinal{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+}
+
+/*
+  TEXT AND NUMBERS STYLE
+*/
+.numbers{
+  /* style */
+  color: #A2FFFF;
+  font-family: Roboto;
+  font-weight: bold;
+  font-size: 80px;
+  /* positioning */
+  padding-right: 20px;
+}
+.text{
+  /* style */
+  color: #7aadbf;
+  font-family: Roboto;
+  font-weight: bold;
+  font-size: 25px;
+  /* positioning */
+  position: absolute;
+  bottom: 17px;
+  left: 150px;
+}
+.endText1{
+  /* style */
+  color: #A2FFFF;
+  font-family: Roboto;
+  font-weight: bold;
+  font-size: 60px;
+  text-align: center;
+  /* positioning */
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+.endText2{
+  /* style */
+  color: #A2FFFF;
+  font-family: Roboto;
+  font-weight: bold;
+  font-size: 60px;
+  text-align: center;
+}
+.endText3{
+  /* style */
+  color: #7aadbf;
+  font-family: Roboto;
+  font-weight: normal;
+  font-size: 40px;
+  text-align: center;
+  text-align: center;
+  /* positioning */
+  padding-top: 20px;
+}
+
+/*
+  ____________________________________________ TUTORIAL PAGES
+*/
+
+/* TUTORIAL pages CONTAINER */
+#tutorial{
+  background-color: #0E0C19;
+  /* dimensions and positioning */
+  width: 100%;
+  height: 100%;
+  top: 0%;
+  position: absolute;
+  /* transition */
+  transition: 1s
+}
+
+/* TUTORIAL PAGES class */
+.tutorialImg{
+  /* positioning */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  /* pointer cursor on hover */
+  cursor: pointer;
+}
+
+
+/*
+  THANKS FOR READING! Check the other code on
+  server.js
+  sketch.js
+  index.html
+*/

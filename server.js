@@ -87,3 +87,8 @@ function newConnection(socket) {
     socket.emit("peopleOnline", sideTrue+sideFalse)
   })
 }
+
+// THANKS FOR READING! Check the other code on
+// sketch.js
+// index.html
+// style.css

@@ -1,4 +1,14 @@
 
+
+
+// [____][____][____][____][____][____][____][____][____][____][__
+// ___][____][____][____][____][____][____][____][____][____][____]
+// [____][____][____]     BREAK THE WALL!     [____][____][____][__
+// ___][____][____][____][____][____][____][____][____][____][____]
+// [____][____][____][____][____][____][____][____][____][____][__
+
+
+
 //________________ GLOBAL VARIABLES ___________________________
 
 var socket; // socket of this CLIENT
@@ -13,7 +23,7 @@ var mySide; // My side of the wall
 var statusDisplay = false; //says if the 'statusContainer' elemet is displayed or not
 var totNumber; //Total number of users that partecipated the experience
 
-//________________ PRELOAD, SETUP & DRAW ___________________________
+//___________________ PRELOAD ________________________________
 
 function preload(){
   // Load SOUNDS
@@ -22,11 +32,13 @@ function preload(){
   soundNear = loadSound('assets/soundnear.mp3');
 }
 
+//___________________ SETUP ________________________________
+
 function setup() {
   // Store the socket of this client
   socket = io.connect();
 
-  // The canvas's width is 3 times bigger than the common windowWidth
+  // The canvas's width is 3 times bigger than the canvasContainer
   canvas = createCanvas(1200*3, 600);
   // Positioning the canvas in the HTML
   canvas.id('wallCanvas');
@@ -132,6 +144,8 @@ function setup() {
 
 }
 
+//___________________ DRAW ________________________________
+
 function draw() {
   clear();
   // Emit the mouse position to the server
@@ -233,31 +247,31 @@ function leftMoveCanvas() {
 // Display the status window
 function displayStatusWindow() {
   socket.emit('askPeopleOnline'); // Ask the server for the number of people online
-  var bricksLeft=0;
-  for (var i = 0; i < bricks.length; i++) {
-    if (bricks[i].stato == true) {
-      bricksLeft++;
-    }
-  }
+  // Gets the number of bricks left
+  var bricksLeft = bricksLeftNumber();
+  // Set the number with to 3 digits
   bricksLeft = ('000' + bricksLeft).substr(-3)
-  select('#bricks').html(bricksLeft);
+  select('#bricks').html(bricksLeft); // Set the number in the html
 
+  // Display or hide the status window
   var container = select('#statusContainer')
+  // Hide
   if (statusDisplay == true) {
-    container.style('top', '-100%');
-    select('#statusButton').html('i')
-    statusDisplay = !statusDisplay;
+    container.style('top', '-100%'); //hide
+    select('#statusButton').html('i'); // change the button image
+    statusDisplay = !statusDisplay; // Change the status display
+  // Display
   }else {
-    container.style('top', '0');
-    select('#statusButton').html('x')
-    statusDisplay = !statusDisplay;
+    container.style('top', '0'); // display
+    select('#statusButton').html('x'); // change the button image
+    statusDisplay = !statusDisplay; // Change the status display
   }
 }
 
 //________________ SOCKET LISTENERS functions ________________
 
-// Take the data of the USER CLICKING and
-// make a SOUND based on the click distance
+////// Take the data of the USER CLICKING and
+////// make a SOUND based on the click distance
 function soundOnClick(data) {
   // Make a sound only if the user is on the other side
   if (data.side != mySide) {
@@ -278,6 +292,7 @@ function soundOnClick(data) {
       var medium = 500; // medium distance
       var near = 100; // near distance
 
+      // Make the sound according to the distance
       if (clickDistance <= near) {
         soundNear.play();
       } else if (clickDistance <= medium) {
@@ -290,8 +305,9 @@ function soundOnClick(data) {
 
   }
 }
-// FILL THE "BRICKS" ARRAY WITH FIREBASE DATAS
 
+
+////// FILL THE "BRICKS" ARRAY WITH FIREBASE DATAS
 function createBricks(data){
   // Variables which contains all the values of the database
   var blocchi = data.val();
@@ -308,37 +324,46 @@ function createBricks(data){
   }
 }
 
-var timeLeft = function(){
-    var currentDate = new Date();
-    currentDate = currentDate.getTime();
-    var endDate = new Date("2020-02-13T00:00:00");
-    if (parseInt((endDate-currentDate)/1000)<0){return 0};
-    return parseInt((endDate-currentDate)/1000);
+////// COUNTDOWN function
+function timeLeft() {
+  // get the current date
+  var currentDate = new Date();
+  currentDate = currentDate.getTime();
+  // end date
+  var endDate = new Date("2020-02-13T00:00:00");
+  // calculate the difference --> countDown
+  return parseInt((endDate - currentDate) / 1000);
 }
 
-var timerText = function(){
-    var h = String(parseInt(timer / 3600));
-    var m = String(parseInt(timer / 60)%60);
-    var s = String(timer - 3600*h - 60*m);
+////// Set the timer to the formattation  -h -m -s
+function timerText() {
 
-    if (h.length == 1){h="0"+h;};
-    if (m.length == 1){m="0"+m;};
-    if (s.length == 1){s="0"+s;};
-
-
-    return h+"h "+m+"m "+s+"s";
-
+  var h = String(parseInt(timer / 3600)); // Get hours
+  var m = String(parseInt(timer / 60) % 60); // Get minutes
+  var s = String(timer - 3600 * h - 60 * m); // Get seconds
+  // convert numbers to strings and to two digits
+  if (h.length == 1) {
+    h = "0" + h;
+  };
+  if (m.length == 1) {
+    m = "0" + m;
+  };
+  if (s.length == 1) {
+    s = "0" + s;
+  };
+  // return correct formattation
+  return h + "h " + m + "m " + s + "s";
 }
 
+////// Set the countdown in the HTML
 function countDown(){
     select('#countDown').html(timerText());
     select('#countDown').parent('#canvasContainer');
 }
-
+//set the timer
 var timer = timeLeft();
 
-// FIRES THE "CLICK" METHOD OF THE BRICKS WHEN THE USER CLICKS
-
+////// FIRES THE "CLICK" METHOD OF THE BRICKS WHEN THE USER CLICKS
 function mousePressed(){
   // Execute the "click" method for all the bricks
   for(var i =0; i < bricks.length; i++){
@@ -354,23 +379,8 @@ function mousePressed(){
   }
 }
 
-// RESET ALL BRICKS "STATO" TO TRUE ON FIREBASE
-
-function resetWall(){
-  for (i = 0; i < bricks.length; i++) {
-    var tempBrick = bricks[i] // Get the brick on i position of the array
-    // Use the brick's ID to find that brick on firebase databse
-    var brickRef = firebase.database().ref('bricks/' + tempBrick.id);
-    // Set the brick STATO to TRUE
-    brickRef.update({
-      stato: true
-    });
-  }
-}
-
-// RECEIVE THE CLICKED BRICK'S "ID" FROM THE SERVER
-// AND SET IT'S "STATO" TO "FALSE"
-
+////// RECEIVE THE CLICKED BRICK'S "ID" FROM THE SERVER
+////// AND SET IT'S "STATO" TO "FALSE"
 function clicker(data){
   // Find the brick on the BRICKS array that has the same ID
   // of the data received
@@ -378,8 +388,7 @@ function clicker(data){
   getBrick.stato = false; // Set the STATO to FALSE
 }
 
-// CREATE OR UPDATE THE CURSORS OF OTHER USERS
-
+////// CREATE OR UPDATE THE CURSORS OF OTHER USERS
 function mousePos(data){
   if (data.side != mySide) {
     // Find the cursor that has the same ID of the data received
@@ -398,25 +407,28 @@ function mousePos(data){
 
   }
 }
+
+////// Returns the number of Bricks not destroyed
 function bricksLeftNumber() {
   var bricksLeft = 0; //Bricks left on the wall
-
+  // Check all the bricks
   for (var i = 0; i < bricks.length; i++) {
+    // If the brick is not destroyed, increment BricksLeft
     if (bricks[i].stato == true) {
       bricksLeft++;
     }
   }
-
-  return bricksLeft;
-
+  return bricksLeft; // return number of bricks left
 }
 
-var tutorialCount = 0;
+////// Hide pages of the tutorial (on click)
+var tutorialCount = 0; // count the status to hide the div containing the pages
 function hideElement(_element) {
-  tutorialCount++;
-  _element.style.display = 'none';
+  tutorialCount++; // next status
+  _element.style.display = 'none'; // Hide the elemet clicked
+  // if on status 3 Hide the div containing the pages
   if (tutorialCount == 3) {
-    select('#tutorial').style('top', '-100%')
+    select('#tutorial').style('top', '-100%');
   }
 }
 
@@ -458,17 +470,17 @@ function Brick(_id, _x, _y, _stato) {
   // if the mouse is hover and another user's mouse is hover
   this.click = function() {
 
-    // these ifs chek if the mouse is over the brick
+    // Check if the mouse is over the brick
     if (mouseX > this.x && mouseX < this.x + this.w) {
       if (mouseY > this.y && mouseY < this.y + this.h) {
-
+        // If the brick is not destroyed send the click to other clients
         if (this.stato == true) {
           var clickPosition = {
             x: mouseX,
             y: mouseY,
             side: mySide
           }
-          socket.emit('click', clickPosition)
+          socket.emit('click', clickPosition) // Emit the click
         }
 
         // Search for another cursor over the brick
@@ -484,7 +496,7 @@ function Brick(_id, _x, _y, _stato) {
           });
 
           // Emit the brick ID to the server to set its stato
-          // to false also on ther clients
+          // to false also on other clients
           var data = this.id;
           socket.emit('clickBrick', data);
         }
@@ -495,7 +507,7 @@ function Brick(_id, _x, _y, _stato) {
 
 //________________ CURSOR OF MAIN USER
 
-function myCursor(_x, _y){
+function myCursor(){
   this.x = mouseX;
   this.y = mouseY;
   this.size = 50;
@@ -511,7 +523,7 @@ function myCursor(_x, _y){
     }
     this.history.push(prevPos);
 
-    //If the ARRAY has more than 30 objects, the oldest ones DISAPPEAR
+    //If the ARRAY has more than 30 objects, delete the older one
     if(this.history.length > 30){
       this.history.splice(0,1);
     }
@@ -528,30 +540,35 @@ function myCursor(_x, _y){
     }
     // ELLIPSE displaying the CURSOR
     fill(	162, 255, 255, 240);
-    var x = mouseX;
-    var y = mouseY;
-    ellipse(x, y, 30);
+    ellipse(mouseX, mouseY, 30);
+    // Cross on the mouse position
     strokeWeight(1.3);
     stroke('#0E0C19');
-    line(x-3.5,y,x+3.5,y);
-    line(x,y-3.5,x,y+3.5);
+    line(mouseX-3.5,mouseY,mouseX+3.5,mouseY);
+    line(mouseX,mouseY-3.5,mouseX,mouseY+3.5);
   }
 }
 
 //________________ AURA OF MAIN USER
+//________________ DISPLAYED ON CLICK
 
-function Aura(_x, _y){
+function Aura(){
+
+  // ATTRIBUTES
+
+  // It is set on the mouse position
   this.x = mouseX;
   this.y = mouseY;
-  this.dim = 0;
-  this.opacity = 255;
+  this.dim = 0; // starts little
+  this.opacity = 255; // starts completely visible
 
   //Method which DISPLAYS the AURA and makes it DISAPPEAR GRADUALLY
   this.display = function(){
-    strokeWeight(2);
-    this.dim += 5;
-    this.opacity -= 10;
+    this.dim += 5; // make it bigger
+    this.opacity -= 10; // make it disappear
+    // Display the aura
     noFill();
+    strokeWeight(2);
     stroke(127, 255, 212, this.opacity);
     ellipse(this.x, this.y, this.dim);
   }
@@ -559,6 +576,7 @@ function Aura(_x, _y){
 
 //________________ CURSOR OF OTHER USERS
 
+// palette of the other users
 var palette = [
   {r: 255, g: 127, b: 234 },
   {r: 255, g: 148, b: 127 },
@@ -582,21 +600,24 @@ function Cursor(_x, _y, _id){
   this.y = _y;
   // Cursor's unique ID equal to it's SOCKET ID
   this.id = _id;
-  // Random color
+  // Random COLOR from the PALETTE
   this.color = palette[round(random(palette.length-1))]
   console.log(this.color);
   this.size = 30;
-
+  // Old positions
   this.history = [];
 
   // CURSOR METHODS
-  //UPDATE
+
+  //UPDATE the HISTORY of positions
   this.update = function(){
+    // Position
     var prevPos = {
       x: this.x,
       y: this.y
     }
-    this.history.push(prevPos);
+    this.history.push(prevPos); // PUSH the position in HISTORY
+    // If the there are 30 objects DELETE the OLDER one
     if(this.history.length > 30){
       this.history.splice(0,1);
     }
@@ -605,41 +626,92 @@ function Cursor(_x, _y, _id){
   // DISPLAY
   // Draw the cursor with it's color
   this.display = function(){
+    // Display the cursor trail from positions in the HISTORY array
     noStroke();
     fill(this.color.r, this.color.g, this.color.b, 30);
     for(var i = 0; i < this.history.length; i++){
-      ellipse(this.history[i].x, this.history[i].y, i*2);
+      ellipse(this.history[i].x, this.history[i].y, i*2); // newest position --> bigger ellipse
     }
+    // Display the center of the cursor
     fill(this.color.r, this.color.g, this.color.b, 150);
     ellipse(this.x, this.y, 20);
 
   }
 }
 
+//________________ SPECIAL FUNCTIONS TO MANAGE THE WALL DATAS IN FIREBASE _________________________
+
+////// RESET ALL BRICKS "STATO" TO TRUE ON FIREBASE
+function resetWall(){
+  for (i = 0; i < bricks.length; i++) {
+    var tempBrick = bricks[i] // Get the brick on i position of the array
+    // Use the brick's ID to find that brick on firebase databse
+    var brickRef = firebase.database().ref('bricks/' + tempBrick.id);
+    // Set the brick STATO to TRUE
+    brickRef.update({
+      stato: true
+    });
+  }
+}
 
 
-
-//________________ SPECIAL FUNCTION TO CREATE THE WALL ___________________________
+////// WALL CREATION IN FIREBASE
 function createTheWall() {
+  // Bricks reference on firebase
   var brickRef = firebase.database().ref('bricks');
 
-  for (var j = 0; j <= 550; j+=50) {
+  // Create the wall in ROWS
+  // J --> y position
+  // I --> x position
+  // the offset value move the odd rows of 50 pixels
+  // to make a staggered position effect (as below)
 
+  // [____][____][____][____][____][____][____][____][____][____][__
+  // ___][____][____][____][____][____][____][____][____][____][____]
+  // [____][____][____][____][____][____][____][____][____][____][__
+  // ___][____][____][____][____][____][____][____][____][____][____]
+  // [____][____][____][____][____][____][____][____][____][____][__
+
+  for (var j = 0; j <= 550; j+=50) {
+    // Check if is an odd row
     if ((j/50) % 2 == 1) {
-      var offset = -50;
+      var offset = -50; // offset to move the odd rows
     }else {
       var offset = 0;
     }
-
+    // Create all bricks of the row
     for (var i = 0; i <= 1200*3; i+=100) {
+      // Create the single brick object
       var tempBrick = {
         x:i + offset,
         y:j,
         stato: true
       }
-
-      brickRef.push(tempBrick)
+      brickRef.push(tempBrick) // Push it in firebase
     }
   }
-
 }
+
+// [____][____][____][____][____][____][____][____][____][____][__
+// ___][____][____][____][____][____][____][____][____][____][____]
+// [____][____][____][____][____][____][____][____][____][____][__
+
+// THANKS FOR READING OUR CODE! (Check also server.js, index.html, style.css)
+// Try to break all the walls and divisions out there.
+
+// CODE BY:
+
+// Martina Melillo           (u  w  u)
+//
+// Alessandro Piredda        (^  -  ^)
+//
+// Alessandro Quets          (ಡ ω ಡ)
+
+// Creative Coding Class - a.a. 2019/2020 - Politecnico di Milano
+// Teachers : Michele Mauri, Andrea Benedetti
+
+// [____][____][____][____][____][____][____][____][____][____][__
+// ___][____][____][____][____][____][____][____][____][____][____]
+// [____][____][____][____][____][____][____][____][____][____][__
+// ___][____][____][____][____][____][____][____][____][____][____]
+// [____][____][____][____][____][____][____][____][____][____][__
