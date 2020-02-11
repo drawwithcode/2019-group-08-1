@@ -258,7 +258,16 @@ body {
   /* pointer cursor on hover */
   cursor: pointer;
 }
-
+/* GIFS of the tutorial */
+.tutorialGif {
+  /* positioning */
+  top: 50%;
+  left: 37%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  /* pointer cursor on hover */
+  cursor: pointer;
+}
 
 /*
   THANKS FOR READING! Check the other code on

@@ -429,9 +429,10 @@ function hideElement(_element) {
   // if on status 3 Hide the div containing the pages
   if (tutorialCount == 3) {
     select('#tutorial').style('top', '-100%');
+    gif2.style.display = 'none'; // hide the gif on the third page
   }
   if(tutorialCount ==2){
-    gif1.style.display = 'none';
+    gif1.style.display = 'none'; // hide the gif on the second page
   }
 }
 
