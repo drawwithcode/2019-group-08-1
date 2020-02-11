@@ -5,10 +5,9 @@
 
 ### Table of contents
 
-1.[The Project](#The Project)
-
-  a.[Idea](#Idea)
-  b.[Inspirations](#Inspirations)
+1. [The Project](#The Project) <br>
+  a. [Idea](#Idea) <br>
+  b. [Inspirations](#Inspirations) <br>
 
 2.[Design Challenges](#Design Challenges)
   a.[Architecture](#Architecture)
