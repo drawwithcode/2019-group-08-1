@@ -29,32 +29,17 @@
 7.[Course](#Course)
 
 
-## The Project
+# The Project
 Break the Wall is a one-day game which celebrates the anniversary of the fall of the Wall of Berlin, on the 30th of October. It's a reminder to always be against all kinds of divisions, whatever they are physical or psychological. Working side by side, users will be able to destroy the wall and be happy together.
 
 ## Context
-We are living the years of the walls. In today's world, we live situations where human kind builds walls to separate nations,  families and friends. We took inspiration form the current historical events: The Mexico border wall, Brexit, the Italian immigration policy issues and many more around the world. Moreover, we found our final inspiration from the Google doodle of the anniversary of Berlin's Wall fall.
+We are living the years of the walls. Today, we live situations where humankind builds walls to separate nations, ethnicities and families. We took inspiration form the current historical events: The Mexico border wall, the Brexit, the Italian immigration policy issues and many more around the world. Moreover, we found our final inspiration from the Google doodle of the anniversary of Berlin's Wall fall.
 
 ## Idea
-Because we want to show how terrible it is to have a wall between us, we wanted to actually experience the feeling of division and "being on the other side". At first, people are separated on two different sides of the wall, unable to see each other. To break free from this horrible situation they have to work together, showing that to defeat wall we must be one.
+It's terrible to have a wall between us.
 
+We wanted people to actually experience the feeling of division and "being on the other side", but also, to experience the joy of meeting who's behind the wall. 
 
+At first, they are separated on two different sides, unable to see each other. To break free from this horrible situation they have to work together, showing that the more people are separated, the more they want to be together.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-a
+# Design Challenges
