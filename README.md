@@ -286,4 +286,4 @@ There are three main interactions in Break the Wall!
  Creative Coding 2019/2020 (https://drawwithcode.github.io/2019/) <br>
  Politecnico di Milano - Scuola del Design
 
- Faculty: Michele Mauri, Andrea Benedetti
+ Teachers: Michele Mauri, Andrea Benedetti
