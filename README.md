@@ -45,6 +45,8 @@ We wanted people to actually experience the feeling of division and "being on th
 
 At first, they are separated on two different sides, unable to see each other. To break free from this horrible situation they have to work together, showing that the more people are separated, the more they want to be together.
 
+<p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/fatine%20insieme.gif"</p>
+
 # Design Challenges
 ## Architecture
 The game is divided in three main instances:
@@ -76,7 +78,9 @@ There are three main interactions in Break the Wall!
 
 * And the last, but not the least, is when they click on the same brick, destroying it together.
 
-<p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/fatine%20insieme.gif"</p>
+When the users destroy the entire wall, a text will appear, displaying how many people cooperated to break the wall.
+
+<p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/finalfinal.gif"</p>
  
  # Code Challenges
  To make this project we had to code and think a lot of ways to find solutions to get the result we wanted. <br>
