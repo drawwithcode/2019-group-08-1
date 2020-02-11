@@ -291,7 +291,3 @@ When the users destroy the entire wall, a text will appear, displaying how many 
  Politecnico di Milano - Scuola del Design
 
  Teachers: Michele Mauri, Andrea Benedetti
- 
- <p align="center">
-<img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/final.gif"
- </p>
