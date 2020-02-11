@@ -606,7 +606,6 @@ function Cursor(_x, _y, _id){
   this.id = _id;
   // Random COLOR from the PALETTE
   this.color = palette[round(random(palette.length-1))]
-  console.log(this.color);
   this.size = 30;
   // Old positions
   this.history = [];
