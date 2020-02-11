@@ -1,6 +1,5 @@
-<p align="center">
+
 ![cover](https://github.com/drawwithcode/2019-group-08-1/blob/master/images/cover.gif)
-</p>
 
 ### Table of contents
 
