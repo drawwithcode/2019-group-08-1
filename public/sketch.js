@@ -430,6 +430,9 @@ function hideElement(_element) {
   if (tutorialCount == 3) {
     select('#tutorial').style('top', '-100%');
   }
+  if(tutorialCount ==2){
+    gif1.style.display = 'none';
+  }
 }
 
 //________________ CLASSES ___________________________
