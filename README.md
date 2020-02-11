@@ -80,33 +80,31 @@ And the last, but not the least, is when they click on the same brick, destroyin
  # Code Challenges
  
  # References
- * P5.js
+ ## P5.js
  We used this library to make the graphics of the game and the client-side of the experience. We used our knowledge gained in the course to manage interactions, animations and sounds.
  
- * Node.js
+ ## Node.js
  Thanks to Node.js, we've been able to script the server-side of the game, connecting users from different devices and locations on the same instance of the website. Throught Node.js we used two frameworks:
  
- - Socket.io: To manage the emitters and the listeners, to connect server and clients.
- - Express: To develop the server in an easier way.
+ * Socket.io: To manage the emitters and the listeners, to connect server and clients.
+ * Express: To develop the server in an easier way.
  
- * Firebase
+ ## Firebase
  With this free database service hosted by Google, we've been able to manage the status of the bricks, and to keep track of the number of users joining our website.
  
- * Heroku
+ ## Heroku
  A web server where we published our website.
  
- <p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/final.gif"</p>
- 
  # Credits
- ## The Coding Train on Youtube
+ * The Coding Train on Youtube
  Daniel Shiffman has helped us understanding <br>
  how Firebase and Node.js work.
  
- ## CodePen.io
+ * CodePen.io
  We found interesting visual inspirations on this <br>
  website, which we applied to our project.
  
- ## StackOverflow.com
+ * StackOverflow.com
  Everytime we had troubles and questions, Google <br>
  leaded us to this website where we found very helpful answers.
  
