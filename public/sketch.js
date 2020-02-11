@@ -22,6 +22,8 @@ function preload(){
 }
 
 function setup() {
+  // Store the socket of this client
+  socket = io.connect();
 
   // The canvas's width is 3 times bigger than the common windowWidth
   canvas = createCanvas(1200*3, 600);
@@ -29,6 +31,9 @@ function setup() {
   canvas.id('wallCanvas');
   canvas.parent('canvasContainer')
   canvas.style('left', '-1200px')
+
+  // Create myCursor object
+  myCursor = new myCursor();
 
   // Firebase configuration
   var firebaseConfig = {
@@ -65,85 +70,43 @@ function setup() {
   })
 
 
-  // Store the socket of this client
-  socket = io.connect();
+//________________ BUTTONS ___________________________
 
+  // RIGHT BUTTON
   rightButton = createImg('./assets/arrowright.png');
+  // when pressed move the canvas
+  rightButton.mousePressed(rightMoveCanvas);
+  // it's style and positioning
   rightButton.style('position', 'absolute');
   rightButton.style('top', '50%');
   rightButton.style('left', '97%');
   rightButton.style('transform', 'translateX(-50%)');
   rightButton.parent('buttonContainer')
 
+  // LEFT BUTTON
   leftButton = createImg('./assets/arrowleft.png');
-  leftButton.position(50, windowHeight/2);
+  // when pressed move the canvas
+  leftButton.mousePressed(leftMoveCanvas);
+  // it's style and positioning
   leftButton.style('position', 'absolute');
   leftButton.style('top', '50%');
   leftButton.style('left', '3%');
   leftButton.style('transform', 'translateX(-50%)');
   leftButton.parent('buttonContainer')
 
-  rightButton.mousePressed(function() {
-    if (canvas.canvas.offsetLeft == -1200) {
-      var movement = -2400;
-      rightButton.style('display', 'none');
-    }else {
-      var movement = -1200
-      leftButton.style('display', 'block');
-    }
-    canvas.style('left',movement + 'px');
-    select('#sfondo2').style('left',movement/4 + 'px');
-    select('#sfondo3').style('left',movement+ 'px');
-  });
-
-  leftButton.mousePressed(function() {
-    if (canvas.canvas.offsetLeft == -1200) {
-      var movement = 0;
-      leftButton.style('display', 'none');
-    }else {
-      var movement = -1200
-      rightButton.style('display', 'block');
-    }
-    canvas.style('left',movement + 'px');
-    select('#sfondo2').style('left',movement/4 + 'px');
-    select('#sfondo3').style('left',movement+ 'px');
-  });
-
-  select('#statusButton').mousePressed(function() {
-    socket.emit('askPeopleOnline');
-    var bricksLeft=0;
-    for (var i = 0; i < bricks.length; i++) {
-      if (bricks[i].stato == true) {
-        bricksLeft++;
-      }
-    }
-    bricksLeft = ('000' + bricksLeft).substr(-3)
-    select('#bricks').html(bricksLeft);
-
-    var container = select('#statusContainer')
-    if (statusDisplay == true) {
-      container.style('top', '-100%');
-      select('#statusButton').html('i')
-      statusDisplay = !statusDisplay;
-    }else {
-      container.style('top', '0');
-      select('#statusButton').html('x')
-      statusDisplay = !statusDisplay;
-    }
-  })
-
-
-
-  myCursor = new myCursor();
+  // Press the "i" button display the status of the wall
+  select('#statusButton').mousePressed(displayStatusWindow)
 
   //________________ SOCKETS LISTENERS ___________________________
 
+  // Refresh the 'onlinePlayers' number
   socket.on('peopleOnline', function(data) {
     var peopleOnline = ('000' + data).substr(-3)
     select('#onlineNumber').html(peopleOnline);
 
   })
 
+  // Server position the user on one side of the wall
   socket.on('yourSide', function(data) {
     mySide = data;
   })
@@ -162,33 +125,9 @@ function setup() {
     cursors.splice(getPos, 1)
   })
 
-  socket.on('click', function(data) {
-    if (data.side != mySide) {
-      var tempDistances = [];
-      for (var i = 0; i < cursors.length; i++) {
-        var tempCursor = cursors[i];
-        var d = dist(mouseX, mouseY, tempCursor.x, tempCursor.y);
-        tempDistances.push(d);
-      }
-      var minDistance = min(tempDistances);
-      var clickDistance = dist(mouseX, mouseY, data.x, data.y)
-      if (minDistance >= clickDistance - 50 && minDistance <= clickDistance + 50) {
-
-        var far = 1000;
-        var medium = 500;
-        var near = 100;
-          if (clickDistance <= near) {
-            soundNear.play();
-          }else if (clickDistance <= medium) {
-            soundMedium.play();
-          }else if (clickDistance <= far) {
-            soundFar.play();
-          }
-
-      }
-
-    }
-  })
+  // Receive the CLICK data of other users from the server
+  // and create a SOUND based on the distance
+  socket.on('click', soundOnClick)
 
 }
 
@@ -218,26 +157,122 @@ function draw() {
   myCursor.display();
   myCursor.update();
 
-  //Display my AURA
+  //Display the AURA on click
   for (var i = 0; i < auraCursor.length; i++) {
     var tempAura = auraCursor[i];
     tempAura.display();
   }
 
+  // Refresh the countDown each second
+  // and display the END TEXT on timer = 0
   if (frameCount % 60 == 0 && timer > 0) {
         timer --;
     }
-
     if (timer == 0) {
 
     } else {
-        countDown();
+        countDown(); // Refresh the countDown text
     }
 
 }
 
 //________________ FUNCTIONS ___________________________
 
+
+//_____ BUTTONS functions ________________
+
+// Move the canvas on the right
+function rightMoveCanvas() {
+  // Check the canvas position
+  if (canvas.canvas.offsetLeft == -1200) {
+    var movement = -2400; // set the canvas completely on the right
+    rightButton.style('display', 'none'); // hide the button
+  }else {
+    var movement = -1200 // set the canvas on the center
+    leftButton.style('display', 'block'); // display the left button
+  }
+  canvas.style('left',movement + 'px'); // Move the canvas
+  // Move the backgrounds with parallax
+  select('#sfondo2').style('left',movement/4 + 'px');
+  select('#sfondo3').style('left',movement+ 'px');
+};
+
+// Move the canvas on the left
+function leftMoveCanvas() {
+  // Check the canvas position
+  if (canvas.canvas.offsetLeft == -1200) {
+    var movement = 0; // set the canvas completely on the left
+    leftButton.style('display', 'none'); // hide the button
+  }else {
+    var movement = -1200 // set the canvas on the center
+    rightButton.style('display', 'block'); // display the right button
+  }
+  canvas.style('left',movement + 'px'); // move the canvas
+  // Move the backgrounds with parallax
+  select('#sfondo2').style('left',movement/4 + 'px');
+  select('#sfondo3').style('left',movement+ 'px');
+}
+
+// Display the status window
+function displayStatusWindow() {
+  socket.emit('askPeopleOnline'); // Ask the server for the number of people online
+  var bricksLeft=0;
+  for (var i = 0; i < bricks.length; i++) {
+    if (bricks[i].stato == true) {
+      bricksLeft++;
+    }
+  }
+  bricksLeft = ('000' + bricksLeft).substr(-3)
+  select('#bricks').html(bricksLeft);
+
+  var container = select('#statusContainer')
+  if (statusDisplay == true) {
+    container.style('top', '-100%');
+    select('#statusButton').html('i')
+    statusDisplay = !statusDisplay;
+  }else {
+    container.style('top', '0');
+    select('#statusButton').html('x')
+    statusDisplay = !statusDisplay;
+  }
+}
+
+//________________ SOCKET LISTENERS functions ________________
+
+// Take the data of the USER CLICKING and
+// make a SOUND based on the click distance
+function soundOnClick(data) {
+  // Make a sound only if the user is on the other side
+  if (data.side != mySide) {
+    //check if the user is the nearest
+    var tempDistances = []; // stores all the distances
+    for (var i = 0; i < cursors.length; i++) {
+      var tempCursor = cursors[i];
+      var d = dist(mouseX, mouseY, tempCursor.x, tempCursor.y); // distance YOUR mouse - OTHER user mouse
+      tempDistances.push(d); // Store in the array
+    }
+    var minDistance = min(tempDistances); // Find the minimum
+    var clickDistance = dist(mouseX, mouseY, data.x, data.y) // distance YOU - CLICK
+    // If the click distance is the same of the nearest distance
+    // (with an amount of error) make a sound
+    if (minDistance >= clickDistance - 50 && minDistance <= clickDistance + 50) {
+
+      var far = 1000; // far distance
+      var medium = 500; // medium distance
+      var near = 100; // near distance
+
+      if (clickDistance <= near) {
+        soundNear.play();
+      } else if (clickDistance <= medium) {
+        soundMedium.play();
+      } else if (clickDistance <= far) {
+        soundFar.play();
+      }
+
+    }
+
+  }
+}
 // FILL THE "BRICKS" ARRAY WITH FIREBASE DATAS
 
 function createBricks(data){
@@ -347,6 +382,15 @@ function mousePos(data){
   }
 }
 
+var tutorialCount = 0;
+function hideElement(_element) {
+  tutorialCount++;
+  _element.style.display = 'none';
+  if (tutorialCount == 3) {
+    select('#tutorial').style('top', '-100%')
+  }
+}
+
 //________________ CLASSES ___________________________
 
 //________________ BRICKS OBJECTS THAT BUILD THE WALL
@@ -449,17 +493,17 @@ function myCursor(_x, _y){
     //For cycle which creates ellipses out of the PREVIOUS POSITIONS
     //The NEWEST POSITIONS create BIGGER ellipses
     noStroke();
-    fill(	127, 255, 212, 30);
+    fill(	162, 255, 255, 30);
     for(var i = 0; i < this.history.length; i++){
       ellipse(this.history[i].x, this.history[i].y, i*2.5);
     }
     // ELLIPSE displaying the CURSOR
-    fill(	127, 255, 212, 240);
+    fill(	162, 255, 255, 240);
     var x = mouseX;
     var y = mouseY;
     ellipse(x, y, 30);
-    strokeWeight(1);
-    stroke(0);
+    strokeWeight(1.3);
+    stroke('#0E0C19');
     line(x-3.5,y,x+3.5,y);
     line(x,y-3.5,x,y+3.5);
   }
