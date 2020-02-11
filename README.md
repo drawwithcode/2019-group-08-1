@@ -131,14 +131,81 @@ There are three main interactions in Break the Wall!
  ```
  
   * Aura display
+  We needed to give the user a visual feedback when they click. So we designed an animation using another object displaying the "echo" of the click
+  
  ```
- 
+ function Aura(){
+  // It is set on the mouse position
+  this.x = mouseX;
+  this.y = mouseY;
+  this.dim = 0; // starts little
+  this.opacity = 255; // starts completely visible
+
+  //Method which DISPLAYS the AURA and makes it DISAPPEAR GRADUALLY
+  this.display = function(){
+    this.dim += 5; // make it bigger
+    this.opacity -= 10; // make it disappear
+    // Display the aura
+    noFill();
+    strokeWeight(2);
+    stroke(127, 255, 212, this.opacity);
+    ellipse(this.x, this.y, this.dim);
+  }
+}
  
  ```
  
   * Cursors management
+  
+  This is what happens on the emitter client:
  ```
+ // Emit the mouse position to the server
+ var mousePosition = {
+   x: mouseX,
+   y: mouseY,
+   side: mySide,
+ }
+ socket.emit('mouse', mousePosition);
+ ```
+  And this is what happens on the server:
  
+ ```
+ // receive the MOUSE POSITION from client and broadcast it to other clients adding the USER ID
+ socket.on('mouse', function(data) {
+    var mouseData = {
+      x: data.x,
+      y: data.y,
+      id: socket.id,
+      side: data.side,
+    }
+
+    socket.broadcast.emit('posMouse', mouseData);
+  });
+ ```
+  This is what happens on the receiver client:
+ 
+ ```
+ // Receive the MOUSE POSITIONS of the other clients and add the new users to the CURSORS array
+ socket.on('posMouse', mousePos);
+
+ function mousePos(data){
+  if (data.side != mySide) {
+    // Find the cursor that has the same ID of the data received
+    var getPos = cursors.find(cursor => cursor.id === data.id);
+    // If no cursor with that ID is find ---> "getPos" is set to undefined
+    // so create a new cursor with that ID
+    if (getPos == undefined) {
+      var tempCursor = new Cursor(data.x, data.y, data.id); // Create new cursor
+      cursors.push(tempCursor); // Push it on the "cursors" array
+    }
+    // If there is a cursor with that ID update the position and country
+    else {
+      getPos.x = data.x;
+      getPos.y = data.y;
+    }
+
+  }
+}
  
  ```
  
