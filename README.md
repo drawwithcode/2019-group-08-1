@@ -3,6 +3,8 @@
 <img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/cover.gif"
  </p>
 
+### Table of Contents
+
 1. [The Project](#the-project) <br>
   a. [Idea](#idea) <br>
   b. [Inspirations](#inspirations) <br>
