@@ -96,13 +96,13 @@ And the last, but not the least, is when they click on the same brick, destroyin
  A web server where we published our website.
  
  # Credits
- ## The Coding Train on Youtube
+ ### The Coding Train on Youtube
  Daniel Shiffman has helped us understanding how Firebase and Node.js work.
  
- ## CodePen.io
+ ### CodePen.io
  We found interesting visual inspirations on this website, which we applied to our project.
  
- ## StackOverflow.com
+ ### StackOverflow.com
  Everytime we had troubles and questions, Google leaded us to this website where we found very helpful answers.
  
  # Team Members
