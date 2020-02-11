@@ -10,23 +10,23 @@
   1b. [Idea](#idea) <br>
 
 2.[Design Challenges](#design-challenges)<br>
-  2a.[Architecture](#Architecture)<br>
-  2b.[Visuals](#Visuals)<br>
-  2c.[Sounds](#Sounds)<br>
-  2d.[Interaction](#Interaction)<br>
+  2a.[Architecture](#architecture)<br>
+  2b.[Visuals](#visuals)<br>
+  2c.[Sounds](#sounds)<br>
+  2d.[Interaction](#interaction)<br>
 
-3.[Code Challenges](#Code Challenges)<br>
+3.[Code Challenges](#code-challenges)<br>
 
-4.[References](#References)<br>
-  4a.[P5.js](#P5.js)<br>
-  4b.[Firebase](#Firebase)<br>
-  4c.[Node.js](#Node.js)<br>
+4.[References](#references)<br>
+  4a.[P5.js](#p5.js)<br>
+  4b.[Firebase](#firebase)<br>
+  4c.[Node.js](#node.js)<br>
 
-5.[Credits](#Credits)<br>
+5.[Credits](#credits)<br>
 
-6.[Team Members](#Team Members)<br>
+6.[Team Members](#team-members)<br>
 
-7.[Course](#Course)<br>
+7.[Course](#course)<br>
 
 
 # The Project
@@ -43,3 +43,11 @@ We wanted people to actually experience the feeling of division and "being on th
 At first, they are separated on two different sides, unable to see each other. To break free from this horrible situation they have to work together, showing that the more people are separated, the more they want to be together.
 
 # Design Challenges
+## Architecture
+
+## Visuals
+
+
+## Sounds
+
+## Interactions
