@@ -31,7 +31,7 @@
 
 
 # The Project
-Break the Wall is a one-day game which celebrates the anniversary of the fall of the Wall of Berlin, on the 30th of October. 
+Break the Wall is a one-day desktop game which celebrates the anniversary of the fall of the Wall of Berlin, on the 30th of October. 
 
 It's a reminder to always be against all kinds of divisions, whatever they are physical or psychological. Working side by side, users will be able to destroy the wall and be happy together.
 
