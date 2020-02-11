@@ -6,27 +6,27 @@
 ### Table of Contents
 
 1. [The Project](#the-project) <br>
-  1a. [Context](#Context) <br>
+  1a. [Context](#context) <br>
   1b. [Idea](#idea) <br>
 
-2.[Design Challenges](#Design Challenges)
-  2a.[Architecture](#Architecture)
-  2b.[Visuals](#Visuals)
-  2c.[Sounds](#Sounds)
-  2d.[Interaction](#Interaction)
+2.[Design Challenges](#design-challenges)<br>
+  2a.[Architecture](#Architecture)<br>
+  2b.[Visuals](#Visuals)<br>
+  2c.[Sounds](#Sounds)<br>
+  2d.[Interaction](#Interaction)<br>
 
-3.[Code Challenges](#Code Challenges)
+3.[Code Challenges](#Code Challenges)<br>
 
-4.[References](#References)
-  4a.[P5.js](#P5.js)
-  4b.[Firebase](#Firebase)
-  4c.[Node.js](#Node.js)
+4.[References](#References)<br>
+  4a.[P5.js](#P5.js)<br>
+  4b.[Firebase](#Firebase)<br>
+  4c.[Node.js](#Node.js)<br>
 
-5.[Credits](#Credits)
+5.[Credits](#Credits)<br>
 
-6.[Team Members](#Team Members)
+6.[Team Members](#Team Members)<br>
 
-7.[Course](#Course)
+7.[Course](#Course)<br>
 
 
 # The Project
