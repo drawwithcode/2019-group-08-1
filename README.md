@@ -47,7 +47,7 @@ At first, they are separated on two different sides, unable to see each other. T
 
 ## Visuals
 We decided to go for a vector graphic style, making most of the elements with simple shapes of P5.js
-<img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/gamepalette.png"
+<p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/gamepalette.png"</p>
 
 ## Sounds
 
