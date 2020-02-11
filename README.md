@@ -6,21 +6,21 @@
 ### Table of Contents
 
 1. [The Project](#the-project) <br>
-  a. [Context](#Context) <br>
-  b. [Idea](#idea) <br>
+  1a. [Context](#Context) <br>
+  1b. [Idea](#idea) <br>
 
 2.[Design Challenges](#Design Challenges)
-  a.[Architecture](#Architecture)
-  b.[Visuals](#Visuals)
-  c.[Sounds](#Sounds)
-  d.[Interaction](#Interaction)
+  2a.[Architecture](#Architecture)
+  2b.[Visuals](#Visuals)
+  2c.[Sounds](#Sounds)
+  2d.[Interaction](#Interaction)
 
 3.[Code Challenges](#Code Challenges)
 
 4.[References](#References)
-  a.[P5.js](#P5.js)
-  b.[Firebase](#Firebase)
-  c.[Node.js](#Node.js)
+  4a.[P5.js](#P5.js)
+  4b.[Firebase](#Firebase)
+  4c.[Node.js](#Node.js)
 
 5.[Credits](#Credits)
 
