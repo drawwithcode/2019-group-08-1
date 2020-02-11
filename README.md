@@ -1,5 +1,5 @@
 ![cover]
-(https://github.com/drawwithcode/2019-group-08-1/images/cover.gif
+(https://github.com/drawwithcode/2019-group-08-1/tree/master/images/cover.gif
 
 ### Table of contents
 
