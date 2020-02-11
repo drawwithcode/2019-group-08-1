@@ -79,6 +79,74 @@ There are three main interactions in Break the Wall!
 <p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/fatine%20insieme.gif"</p>
  
  # Code Challenges
+ To make this project we had to code and think a lot of ways to find solutions to get the result we wanted. <br>
+ These are some examples of coding solutions we used:
+ 
+ * Cursor display
+ To give the user's cursor a firefly-like appearance, we created an object which follows the mouse and keeps track of its previous positions.
+ 
+ ```
+ function myCursor(){
+  this.x = mouseX;
+  this.y = mouseY;
+  this.size = 50;
+
+  //Array containing the previous POSITIONS of the MOUSE
+  this.history = [];
+
+  //Method which updates the ARRAY pushing NEW POSITIONS
+  this.update = function(){
+    var prevPos = {
+      x: mouseX,
+      y: mouseY
+    }
+    this.history.push(prevPos);
+
+    //If the ARRAY has more than 30 objects, delete the older one
+    if(this.history.length > 30){
+      this.history.splice(0,1);
+    }
+  }
+
+  //Method which DISPLAYS the CURSOR
+  this.display = function(){
+    //For cycle which creates ellipses out of the PREVIOUS POSITIONS
+    //The NEWEST POSITIONS create BIGGER ellipses
+    noStroke();
+    fill(	162, 255, 255, 30);
+    for(var i = 0; i < this.history.length; i++){
+      ellipse(this.history[i].x, this.history[i].y, i*2.5);
+    }
+    // ELLIPSE displaying the CURSOR
+    fill(	162, 255, 255, 240);
+    ellipse(mouseX, mouseY, 30);
+    // Cross on the mouse position
+    strokeWeight(1.3);
+    stroke('#0E0C19');
+    line(mouseX-3.5,mouseY,mouseX+3.5,mouseY);
+    line(mouseX,mouseY-3.5,mouseX,mouseY+3.5);
+  }
+}
+ 
+ ```
+ 
+  * Aura display
+ ```
+ 
+ 
+ ```
+ 
+  * Cursors management
+ ```
+ 
+ 
+ ```
+ 
+  * Wall
+ ```
+ 
+ 
+ ```
  
  # References
  ## P5.js
@@ -109,7 +177,6 @@ There are three main interactions in Break the Wall!
  Everytime we had troubles and questions, Google <br>
  leaded us to this website where we found very helpful answers.
  
- <p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/final.gif"</p>
  
  # Team Members
  * Martina Melillo (u w u)
