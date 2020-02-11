@@ -67,4 +67,12 @@ The wall is designed to be the most concrete object of the game, in contrast wit
 Users on different sides of the wall can't see each other, but they can hear the sounds the others are making on the other side. We used three different sound effects for three different distances: one weak knock, one louder hit and one metallic strike. This sounds are chosen to help the users to get closer to each other.
 
 ## Interactions
+There are three main interactions in Break the Wall!
 
+The first one happens when the user clicks on the wall, sending a sound to other side.
+
+The second one is when the user receives the sound from other players.
+
+And the last, but not the least, is when they click on the same brick, destroying it together.
+
+<p align="center"><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/fatine%20insieme.gif"</p>
