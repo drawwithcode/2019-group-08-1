@@ -1,4 +1,4 @@
-![alt text](https://github.com/drawwithcode/2019-group-08-1/READMEfiles/cover.gif
+![alt text](https://github.com/drawwithcode/2019-group-08-1/images/cover.gif
 
 ### Table of contents
 
