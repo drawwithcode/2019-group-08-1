@@ -115,6 +115,25 @@
       top: 68%;
     }
 
+    #goodFinal{
+      position:absolute;
+      top:50%;
+      left:50%;
+    }
+
+    #badFinal{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform: translate(-50%, -50%);
+    }
+
+    #finalText{
+    }
+
+    #finalText2{
+    }
+
     /*
       TEXT AND NUMBERS STYLE
     */
@@ -134,6 +153,33 @@
       position: absolute;
       bottom: 17px;
       left: 150px;
+    }
+
+    .endText1{
+      color: #A2FFFF;
+      font-family: Roboto;
+      font-weight: bold;
+      font-size: 60px;
+      position: absolute;
+      text-align: center;
+      transform: translate(-50%, -50%);
+    }
+
+    .endText2{
+      color: #A2FFFF;
+      font-family: Roboto;
+      font-weight: bold;
+      font-size: 60px;
+      text-align: center;
+    }
+
+    .endText3{
+      color: #7aadbf;
+      font-family: Roboto;
+      font-weight: normal;
+      font-size: 40px;
+      text-align: center;
+      padding-top: 20px;
     }
 
     /*
@@ -195,6 +241,7 @@
     <img src="./assets/Sfondo1.png" class="imagepos1" id="sfondo1" alt=""></img>
     <img src="./assets/Sfondo2.png" class="imagepos2" id="sfondo2" alt=""></img>
     <img src="./assets/Sfondo3.png" class="imagepos3" id="sfondo3" alt=""></img>
+    <div id="goodFinal" class="endText1"></div>
   </div>
 
   <div id="countDown" class="unselect">
@@ -221,6 +268,11 @@
     </div>
 
   </div>
+
+  <div id="badFinal">
+    <div id="finalText" class="endText2"></div><div id="finalText2" class="endText3"></div>
+  </div>
+
   <div id="statusButton" class="unselect">i</div>
   <div id="tutorial">
     <img src="assets/tutorial3.png" class="tutorialImg" onclick="hideElement(this)">

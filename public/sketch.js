@@ -11,6 +11,7 @@ var canvas;
 var soundFar, soundMedium, soundNear; // Store the sund files
 var mySide; // My side of the wall
 var statusDisplay = false; //says if the 'statusContainer' elemet is displayed or not
+var totNumber; //Total number of users that partecipated the experience
 
 //________________ PRELOAD, SETUP & DRAW ___________________________
 
@@ -167,11 +168,27 @@ function draw() {
   // and display the END TEXT on timer = 0
   if (frameCount % 60 == 0 && timer > 0) {
         timer --;
-    }
-    if (timer == 0) {
 
-    } else {
-        countDown(); // Refresh the countDown text
+    }
+
+      //End experience text that pops up on the number of bricks and time left of the game
+      var bricksLeft = bricksLeftNumber();
+
+      //If the users are able to destroy the wall in time they get the good final
+      if(bricksLeft < 11 ){
+        select('#goodFinal').html("This Wall <br> has been destroyed <br> by " + totNumber + " people! <br> awesome!");
+      }else {
+        select('#goodFinal').html("");
+      }
+      //If the users are not able to destroy the wall in time they get the bad final
+      if (timer == 0) {
+        if(bricksLeft > 11){
+          select("#finalText").html("This Wall <br> is still keeping apart <br>" + totNumber + " people.");
+          select("#finalText2").html("Next year, find other friends <br> to destroy the wall!")
+          }
+
+      }else {
+        countDown();
     }
 
 }
@@ -380,6 +397,18 @@ function mousePos(data){
     }
 
   }
+}
+function bricksLeftNumber() {
+  var bricksLeft = 0; //Bricks left on the wall
+
+  for (var i = 0; i < bricks.length; i++) {
+    if (bricks[i].stato == true) {
+      bricksLeft++;
+    }
+  }
+
+  return bricksLeft;
+
 }
 
 var tutorialCount = 0;
