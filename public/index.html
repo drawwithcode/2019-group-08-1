@@ -225,6 +225,14 @@
       cursor: pointer;
     }
 
+    .tutorialGif{
+      top: 50%;
+      left: 37%;
+      transform: translate(-50%, -50%);
+      position: absolute;
+      cursor: pointer;
+    }
+
   </style>
   <script src="addons/p5.min.js"></script>
   <script src="addons/p5.sound.min.js"></script>
@@ -276,7 +284,9 @@
   <div id="statusButton" class="unselect">i</div>
   <div id="tutorial">
     <img src="assets/tutorial3.png" class="tutorialImg" onclick="hideElement(this)">
+    <img src="assets/tutorial2.gif" id="gif2" class="tutorialGif" onclick="hideElement(this)">
     <img src="assets/tutorial2.png" class="tutorialImg" onclick="hideElement(this)">
+    <img src="assets/tutorial1.gif" id="gif1" class="tutorialGif" onclick="hideElement(this)">
     <img src="assets/tutorial1.png" class="tutorialImg" onclick="hideElement(this)">
   </div>
 </body>
