@@ -3,6 +3,7 @@ var express = require('express'); // load express
 var socket = require('socket.io'); // load socket.io
 
 //________________ INITIALIZE THE SERVER ___________________________
+
 var app = express(); // set the express app
 app.use(express.static('public')); // select the static files in the public folder
 
