@@ -6,8 +6,8 @@
 ### Table of Contents
 
 1. [The Project](#the-project) <br>
-  a. [Idea](#idea) <br>
-  b. [Inspirations](#inspirations) <br>
+  a. [Context](#Context) <br>
+  b. [Idea](#idea) <br>
 
 2.[Design Challenges](#Design Challenges)
   a.[Architecture](#Architecture)
