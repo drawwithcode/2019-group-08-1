@@ -82,7 +82,7 @@ There are three main interactions in Break the Wall!
  To make this project we had to code and think a lot of ways to find solutions to get the result we wanted. <br>
  These are some examples of coding solutions we used:
  
- * Cursor display
+ * Cursor display <br>
  To give the user's cursor a firefly-like appearance, we created an object which follows the mouse and keeps track of its previous positions.
  
  ```
@@ -155,7 +155,8 @@ There are three main interactions in Break the Wall!
  
  ```
  
-  * Cursors management
+  * Cursors management <br>
+  This is how we managed to display the cursors of the other users on each device connected.
   
   This is what happens on the emitter client:
  ```
@@ -167,7 +168,7 @@ There are three main interactions in Break the Wall!
  }
  socket.emit('mouse', mousePosition);
  ```
-  And this is what happens on the server:
+  This is what happens on the server:
  
  ```
  // receive the MOUSE POSITION from client and broadcast it to other clients adding the USER ID
@@ -182,7 +183,7 @@ There are three main interactions in Break the Wall!
     socket.broadcast.emit('posMouse', mouseData);
   });
  ```
-  This is what happens on the receiver client:
+  And this is what happens on the receiver client:
  
  ```
  // Receive the MOUSE POSITIONS of the other clients and add the new users to the CURSORS array
@@ -209,9 +210,40 @@ There are three main interactions in Break the Wall!
  
  ```
  
-  * Wall
+  * Wall <br>
+  To give our wall the classic positioning of the bricks, we had to code two for loops with an offset position on the odd rows of the wall.
+  
  ```
- 
+   // Create the wall in ROWS
+  // J --> y position
+  // I --> x position
+  // the offset value move the odd rows of 50 pixels
+  // to make a staggered position effect (as below)
+
+  // [____][____][____][____][____][____][____][____][____][____][__
+  // ___][____][____][____][____][____][____][____][____][____][____]
+  // [____][____][____][____][____][____][____][____][____][____][__
+  // ___][____][____][____][____][____][____][____][____][____][____]
+  // [____][____][____][____][____][____][____][____][____][____][__
+
+  for (var j = 0; j <= 550; j+=50) {
+    // Check if is an odd row
+    if ((j/50) % 2 == 1) {
+      var offset = -50; // offset to move the odd rows
+    }else {
+      var offset = 0;
+    }
+    // Create all bricks of the row
+    for (var i = 0; i <= 1200*3; i+=100) {
+      // Create the single brick object
+      var tempBrick = {
+        x:i + offset,
+        y:j,
+        stato: true
+      }
+      brickRef.push(tempBrick) // Push it in firebase
+    }
+  }
  
  ```
  
