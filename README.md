@@ -70,11 +70,11 @@ Users on different sides of the wall can't see each other, but they can hear the
 ## Interactions
 There are three main interactions in Break the Wall!
 
-The first one happens when the user clicks on the wall, sending a sound to other side.
+* The first one happens when the user clicks on the wall, sending a sound to other side.
 
-The second one is when the user receives the sound from other players.
+* The second one is when the user receives the sound from other players.
 
-And the last, but not the least, is when they click on the same brick, destroying it together.
+* And the last, but not the least, is when they click on the same brick, destroying it together.
 
 <p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/fatine%20insieme.gif"</p>
  
