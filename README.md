@@ -130,7 +130,7 @@ There are three main interactions in Break the Wall!
  
  ```
  
-  * Aura display
+  * Aura display <br>
   We needed to give the user a visual feedback when they click. So we designed an animation using another object displaying the "echo" of the click
   
  ```
@@ -158,7 +158,7 @@ There are three main interactions in Break the Wall!
   * Cursors management <br>
   This is how we managed to display the cursors of the other users on each device connected.
   
-  This is what happens on the emitter client:
+   What happens on the emitter client:
  ```
  // Emit the mouse position to the server
  var mousePosition = {
@@ -168,7 +168,7 @@ There are three main interactions in Break the Wall!
  }
  socket.emit('mouse', mousePosition);
  ```
-  This is what happens on the server:
+   What happens on the server:
  
  ```
  // receive the MOUSE POSITION from client and broadcast it to other clients adding the USER ID
@@ -183,7 +183,7 @@ There are three main interactions in Break the Wall!
     socket.broadcast.emit('posMouse', mouseData);
   });
  ```
-  And this is what happens on the receiver client:
+   What happens on the receiver client:
  
  ```
  // Receive the MOUSE POSITIONS of the other clients and add the new users to the CURSORS array
