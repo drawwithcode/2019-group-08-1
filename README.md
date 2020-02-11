@@ -1,6 +1,6 @@
-#BREAK THE WALL!
+![alt text](https://github.com/drawwithcode/2019-group-08-1/READMEfiles/cover.gif
 
-###Table of contents
+### Table of contents
 
 1.[The Project](#The Project)
 
