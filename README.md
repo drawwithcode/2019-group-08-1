@@ -55,7 +55,7 @@ The game is divided in three main instances:
 ## Visuals
 We chose a vector graphic style, making most of the elements with simple shapes of P5.js.<br>
 The wall is designed to be the most concrete object of the game, in contrast with the users, whose cursors have a firefly-like appearance, underlining the difference of the hard nature of the wall and the emotional bondings between people.
-<p align="center"><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/public/assets/tutorial2.gif"</p>
+<p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/public/assets/tutorial2.gif"</p>
  
  The palette reminds of a nocturnal city landscape, with dark and cold colors for the wall, which would also make the lights of the cursors brighter. For the same reasons, we chose light and bright colors for the texts, making them more visibles.
 <p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/fullpalette.png"</p>
@@ -75,24 +75,24 @@ The second one is when the user receives the sound from other players.
 
 And the last, but not the least, is when they click on the same brick, destroying it together.
 
-<p align="center"><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/fatine%20insieme.gif"</p>
+<p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/fatine%20insieme.gif"</p>
  
  # Code Challenges
  
  # References
- ## P5.js
+ * P5.js
  We used this library to make the graphics of the game and the client-side of the experience. We used our knowledge gained in the course to manage interactions, animations and sounds.
  
- ## Node.js
+ * Node.js
  Thanks to Node.js, we've been able to script the server-side of the game, connecting users from different devices and locations on the same instance of the website. Throught Node.js we used two frameworks:
  
- * Socket.io: To manage the emitters and the listeners, to connect server and clients.
- * Express: To develop the server in an easier way.
+ - Socket.io: To manage the emitters and the listeners, to connect server and clients.
+ - Express: To develop the server in an easier way.
  
- ## Firebase
+ * Firebase
  With this free database service hosted by Google, we've been able to manage the status of the bricks, and to keep track of the number of users joining our website.
  
- ## Heroku
+ * Heroku
  A web server where we published our website.
  
  # Credits
