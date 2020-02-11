@@ -96,14 +96,17 @@ And the last, but not the least, is when they click on the same brick, destroyin
  A web server where we published our website.
  
  # Credits
- ### The Coding Train on Youtube
- Daniel Shiffman has helped us understanding how Firebase and Node.js work.
+ ## The Coding Train on Youtube
+ Daniel Shiffman has helped us understanding <br>
+ how Firebase and Node.js work.
  
- ### CodePen.io
- We found interesting visual inspirations on this website, which we applied to our project.
+ ## CodePen.io
+ We found interesting visual inspirations on this <br>
+ website, which we applied to our project.
  
- ### StackOverflow.com
- Everytime we had troubles and questions, Google leaded us to this website where we found very helpful answers.
+ ## StackOverflow.com
+ Everytime we had troubles and questions, Google <br>
+ leaded us to this website where we found very helpful answers.
  
  # Team Members
  * Martina Melillo (u w u)
@@ -111,7 +114,7 @@ And the last, but not the least, is when they click on the same brick, destroyin
  * Alessandro Quets (ಡ ω ಡ)
  
  # Course
- Creative Coding 2019/2020 (https://drawwithcode.github.io/2019/)
+ Creative Coding 2019/2020 (https://drawwithcode.github.io/2019/) <br>
  Politecnico di Milano - Scuola del Design
 
  Faculty: Michele Mauri, Andrea Benedetti
