@@ -31,7 +31,7 @@
 
 
 # The Project
-Break the Wall is a one-day game which celebrates the anniversary of the fall of the Wall of Berlin, on the 30th of October. 
+Break the Wall is a one-day desktop game which celebrates the anniversary of the fall of the Wall of Berlin, on the 30th of October. 
 
 It's a reminder to always be against all kinds of divisions, whatever they are physical or psychological. Working side by side, users will be able to destroy the wall and be happy together.
 
@@ -79,6 +79,173 @@ There are three main interactions in Break the Wall!
 <p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/fatine%20insieme.gif"</p>
  
  # Code Challenges
+ To make this project we had to code and think a lot of ways to find solutions to get the result we wanted. <br>
+ These are some examples of coding solutions we used:
+ 
+ * Cursor display <br>
+ To give the user's cursor a firefly-like appearance, we created an object which follows the mouse and keeps track of its previous positions.
+ 
+ ```
+ function myCursor(){
+  this.x = mouseX;
+  this.y = mouseY;
+  this.size = 50;
+
+  //Array containing the previous POSITIONS of the MOUSE
+  this.history = [];
+
+  //Method which updates the ARRAY pushing NEW POSITIONS
+  this.update = function(){
+    var prevPos = {
+      x: mouseX,
+      y: mouseY
+    }
+    this.history.push(prevPos);
+
+    //If the ARRAY has more than 30 objects, delete the older one
+    if(this.history.length > 30){
+      this.history.splice(0,1);
+    }
+  }
+
+  //Method which DISPLAYS the CURSOR
+  this.display = function(){
+    //For cycle which creates ellipses out of the PREVIOUS POSITIONS
+    //The NEWEST POSITIONS create BIGGER ellipses
+    noStroke();
+    fill(	162, 255, 255, 30);
+    for(var i = 0; i < this.history.length; i++){
+      ellipse(this.history[i].x, this.history[i].y, i*2.5);
+    }
+    // ELLIPSE displaying the CURSOR
+    fill(	162, 255, 255, 240);
+    ellipse(mouseX, mouseY, 30);
+    // Cross on the mouse position
+    strokeWeight(1.3);
+    stroke('#0E0C19');
+    line(mouseX-3.5,mouseY,mouseX+3.5,mouseY);
+    line(mouseX,mouseY-3.5,mouseX,mouseY+3.5);
+  }
+}
+ 
+ ```
+ 
+  * Aura display <br>
+  We needed to give the user a visual feedback when they click. So we designed an animation using another object displaying the "echo" of the click
+  
+ ```
+ function Aura(){
+  // It is set on the mouse position
+  this.x = mouseX;
+  this.y = mouseY;
+  this.dim = 0; // starts little
+  this.opacity = 255; // starts completely visible
+
+  //Method which DISPLAYS the AURA and makes it DISAPPEAR GRADUALLY
+  this.display = function(){
+    this.dim += 5; // make it bigger
+    this.opacity -= 10; // make it disappear
+    // Display the aura
+    noFill();
+    strokeWeight(2);
+    stroke(127, 255, 212, this.opacity);
+    ellipse(this.x, this.y, this.dim);
+  }
+}
+ 
+ ```
+ 
+  * Cursors management <br>
+  This is how we managed to display the cursors of the other users on each device connected.
+  
+   What happens on the emitter client:
+ ```
+ // Emit the mouse position to the server
+ var mousePosition = {
+   x: mouseX,
+   y: mouseY,
+   side: mySide,
+ }
+ socket.emit('mouse', mousePosition);
+ ```
+   What happens on the server:
+ 
+ ```
+ // receive the MOUSE POSITION from client and broadcast it to other clients adding the USER ID
+ socket.on('mouse', function(data) {
+    var mouseData = {
+      x: data.x,
+      y: data.y,
+      id: socket.id,
+      side: data.side,
+    }
+
+    socket.broadcast.emit('posMouse', mouseData);
+  });
+ ```
+   What happens on the receiver client:
+ 
+ ```
+ // Receive the MOUSE POSITIONS of the other clients and add the new users to the CURSORS array
+ socket.on('posMouse', mousePos);
+
+ function mousePos(data){
+  if (data.side != mySide) {
+    // Find the cursor that has the same ID of the data received
+    var getPos = cursors.find(cursor => cursor.id === data.id);
+    // If no cursor with that ID is find ---> "getPos" is set to undefined
+    // so create a new cursor with that ID
+    if (getPos == undefined) {
+      var tempCursor = new Cursor(data.x, data.y, data.id); // Create new cursor
+      cursors.push(tempCursor); // Push it on the "cursors" array
+    }
+    // If there is a cursor with that ID update the position and country
+    else {
+      getPos.x = data.x;
+      getPos.y = data.y;
+    }
+
+  }
+}
+ 
+ ```
+ 
+  * Wall <br>
+  To give our wall the classic positioning of the bricks, we had to code two for loops with an offset position on the odd rows of the wall.
+  
+ ```
+   // Create the wall in ROWS
+  // J --> y position
+  // I --> x position
+  // the offset value move the odd rows of 50 pixels
+  // to make a staggered position effect (as below)
+
+  // [____][____][____][____][____][____][____][____][____][____][__
+  // ___][____][____][____][____][____][____][____][____][____][____]
+  // [____][____][____][____][____][____][____][____][____][____][__
+  // ___][____][____][____][____][____][____][____][____][____][____]
+  // [____][____][____][____][____][____][____][____][____][____][__
+
+  for (var j = 0; j <= 550; j+=50) {
+    // Check if is an odd row
+    if ((j/50) % 2 == 1) {
+      var offset = -50; // offset to move the odd rows
+    }else {
+      var offset = 0;
+    }
+    // Create all bricks of the row
+    for (var i = 0; i <= 1200*3; i+=100) {
+      // Create the single brick object
+      var tempBrick = {
+        x:i + offset,
+        y:j,
+        stato: true
+      }
+      brickRef.push(tempBrick) // Push it in firebase
+    }
+  }
+ 
+ ```
  
  # References
  ## P5.js
@@ -109,7 +276,6 @@ There are three main interactions in Break the Wall!
  Everytime we had troubles and questions, Google <br>
  leaded us to this website where we found very helpful answers.
  
- <p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/final.gif"</p>
  
  # Team Members
  * Martina Melillo (u w u)
@@ -120,4 +286,8 @@ There are three main interactions in Break the Wall!
  Creative Coding 2019/2020 (https://drawwithcode.github.io/2019/) <br>
  Politecnico di Milano - Scuola del Design
 
- Faculty: Michele Mauri, Andrea Benedetti
+ Teachers: Michele Mauri, Andrea Benedetti
+ 
+ <p align="center">
+<img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/final.gif"
+ </p>
