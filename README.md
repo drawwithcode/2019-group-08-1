@@ -48,8 +48,10 @@ At first, they are separated on two different sides, unable to see each other. T
 ## Architecture
 
 ## Visuals
-We decided to go for a vector graphic style, making most of the elements with simple shapes of P5.js. 
-<p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/gamepalette.png"</p>
+We decided to go for a vector graphic style, making most of the elements with simple shapes of P5.js.
+The wall is designed to be the most concrete object of the game, in contrast with the users, whose cursors have a firefly-like appearance, underlining the difference of the hard nature of the wall and the emotional bondings between people.
+<p align="center"><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/public/assets/tutorial2.gif"</p>
+<p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/fullpalette.png"</p>
 
 ## Sounds
 
