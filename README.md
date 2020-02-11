@@ -95,6 +95,8 @@ And the last, but not the least, is when they click on the same brick, destroyin
  * Heroku
  A web server where we published our website.
  
+ <p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/final.gif"</p>
+ 
  # Credits
  ## The Coding Train on Youtube
  Daniel Shiffman has helped us understanding <br>
