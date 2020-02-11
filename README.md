@@ -89,7 +89,7 @@ When the users destroy the entire wall, a text will appear, displaying how many 
  * Cursor display <br>
  To give the user's cursor a firefly-like appearance, we created an object which follows the mouse and keeps track of its previous positions.
  
- ```
+ ```javascript
  function myCursor(){
   this.x = mouseX;
   this.y = mouseY;
