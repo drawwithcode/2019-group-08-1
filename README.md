@@ -46,6 +46,11 @@ At first, they are separated on two different sides, unable to see each other. T
 
 # Design Challenges
 ## Architecture
+The game is divided in three main instances:
+
+* A Tutorial at the start of the experience, explaining the game dynamics to the new user
+* The actual game window, showing the wall and the online users interacting
+* An info window, with the current status of the wall and players, and a brief description of the project
 
 ## Visuals
 We chose a vector graphic style, making most of the elements with simple shapes of P5.js.<br>
@@ -56,7 +61,10 @@ The wall is designed to be the most concrete object of the game, in contrast wit
 <p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/fullpalette.png"</p>
  
  Lastly, we chose Roboto as our font. Since our experience is meant to be a Google doodle game, we used Google official type.
+ <p><img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/font.png"</p>
 
 ## Sounds
+Users on different sides of the wall can't see each other, but they can hear the sounds the others are making on the other side. We used three different sound effects for three different distances: one weak knock, one louder hit and one metallic strike. This sounds are chosen to help the users to get closer to each other.
 
 ## Interactions
+
