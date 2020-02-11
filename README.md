@@ -37,3 +37,24 @@ We are living the years of the walls. In today's world, we live situations where
 
 ## Idea
 Because we want to show how terrible it is to have a wall between us, we wanted to actually experience the feeling of division and "being on the other side". At first, people are separated on two different sides of the wall, unable to see each other. To break free from this horrible situation they have to work together, showing that to defeat wall we must be one.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+a
