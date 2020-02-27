@@ -330,7 +330,7 @@ function timeLeft() {
   var currentDate = new Date();
   currentDate = currentDate.getTime();
   // end date
-  var endDate = new Date("2020-02-13T00:00:00");
+  var endDate = new Date("2020-02-28T00:00:00");
   // calculate the difference --> countDown
   return parseInt((endDate - currentDate) / 1000);
 }
