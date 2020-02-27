@@ -89,7 +89,7 @@ When the users destroy the entire wall, a text will appear, displaying how many 
  * Cursor display <br>
  To give the user's cursor a firefly-like appearance, we created an object which follows the mouse and keeps track of its previous positions.
  
- ```
+ ```javascript
  function myCursor(){
   this.x = mouseX;
   this.y = mouseY;
@@ -137,7 +137,7 @@ When the users destroy the entire wall, a text will appear, displaying how many 
   * Aura display <br>
   We needed to give the user a visual feedback when they click. So we designed an animation using another object displaying the "echo" of the click
   
- ```
+ ```javascript
  function Aura(){
   // It is set on the mouse position
   this.x = mouseX;
@@ -163,7 +163,7 @@ When the users destroy the entire wall, a text will appear, displaying how many 
   This is how we managed to display the cursors of the other users on each device connected.
   
    What happens on the emitter client:
- ```
+ ```javascript
  // Emit the mouse position to the server
  var mousePosition = {
    x: mouseX,
@@ -174,7 +174,7 @@ When the users destroy the entire wall, a text will appear, displaying how many 
  ```
    What happens on the server:
  
- ```
+ ```javascript
  // receive the MOUSE POSITION from client and broadcast it to other clients adding the USER ID
  socket.on('mouse', function(data) {
     var mouseData = {
@@ -189,7 +189,7 @@ When the users destroy the entire wall, a text will appear, displaying how many 
  ```
    What happens on the receiver client:
  
- ```
+ ```javascript
  // Receive the MOUSE POSITIONS of the other clients and add the new users to the CURSORS array
  socket.on('posMouse', mousePos);
 
@@ -217,7 +217,7 @@ When the users destroy the entire wall, a text will appear, displaying how many 
   * Wall <br>
   To give our wall the classic positioning of the bricks, we had to code two for loops with an offset position on the odd rows of the wall.
   
- ```
+ ```javascript
    // Create the wall in ROWS
   // J --> y position
   // I --> x position
@@ -291,7 +291,3 @@ When the users destroy the entire wall, a text will appear, displaying how many 
  Politecnico di Milano - Scuola del Design
 
  Teachers: Michele Mauri, Andrea Benedetti
- 
- <p align="center">
-<img src="https://github.com/drawwithcode/2019-group-08-1/blob/master/images/final.gif"
- </p>
